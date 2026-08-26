@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <!--
+    仮のOGP画像です。SNSでのシェア表示を最適化するため、
+    実際の運用時は 1200x630 の png/jpg 画像に差し替えることを推奨します。
+    差し替え後は index.html の <meta property="og:image" ...> のパスも更新してください。
+  -->
+  <rect width="1200" height="630" fill="#14539a" />
+  <rect width="1200" height="630" fill="url(#g)" opacity="0.5" />
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0d3c73" />
+      <stop offset="1" stop-color="#14539a" />
+    </linearGradient>
+  </defs>
+  <text x="80" y="300" font-family="Arial, sans-serif" font-size="72" font-weight="bold" fill="#ffffff">
+    Promeon Web
+  </text>
+  <text x="80" y="370" font-family="Arial, sans-serif" font-size="34" fill="#eaf2fb">
+    小さな会社にも、ちゃんとしたWebサイトを。
+  </text>
+</svg>

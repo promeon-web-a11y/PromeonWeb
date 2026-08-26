@@ -1,0 +1,15 @@
+{
+  "name": "promeon-web",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Web制作サービス Promeon Web の公式サイト",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "vite": "^8.2.2"
+  }
+}
