@@ -4,245 +4,144 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <title>Webサイト制作｜短納期・中小企業向けWeb制作 | Promeon Web</title>
+    <title>チャットだけで、伝わるWebサイトを。｜中小企業向けWeb制作 Promeon Web</title>
     <meta
       name="description"
-      content="Webサイトを持っていない、または今のサイトをリニューアルしたい中小企業・個人事業主・店舗向けのWeb制作サービスです。最短1時間から相談可能、原則24時間以内の返信を心がけています。Webに詳しくない方もお気軽にご相談ください。"
+      content="中小企業・個人事業主向けのホームページを分かりやすい料金で制作。打ち合わせから納品までチャット中心、Miniプラン49,800円（税込）から、スマホ対応。納期はご依頼内容により異なります。ご相談とお見積りは無料です。"
     />
 
-    <!-- favicon（public/favicon.svg を差し替えることでロゴを変更できます） -->
-    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" type="image/png" href="/favicon.png" sizes="any" />
+    <link rel="apple-touch-icon" href="/favicon.png" />
 
-    <!-- OGP設定：SNSでシェアされた際に表示される情報です -->
-    <!-- og:url と og:image は、独自ドメイン確定後・OGP画像用意後に差し替えてください -->
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="Promeon Web" />
-    <meta property="og:title" content="Webサイト制作｜短納期・中小企業向けWeb制作 | Promeon Web" />
+    <meta property="og:title" content="チャットだけで、伝わるWebサイトを。｜Promeon Web" />
     <meta
       property="og:description"
-      content="早く、分かりやすく、必要なものだけ。Webに詳しくなくても相談できるWeb制作サービスです。"
+      content="中小企業・個人事業主向けのホームページを、分かりやすい料金で。チャット中心・スマホ対応。納期は要相談。相談・見積り無料。"
     />
     <meta property="og:image" content="/og-image.svg" />
-    <!-- 例: <meta property="og:url" content="https://your-domain.example/" /> -->
+    <meta property="og:url" content="" />
     <meta name="twitter:card" content="summary_large_image" />
 
     <link rel="stylesheet" href="/src/style.css" />
     <script type="module" src="/src/main.js"></script>
   </head>
   <body>
-    <!-- JavaScriptが無効な場合の代替情報（検索エンジン・アクセシビリティ配慮） -->
     <noscript>
       <div style="padding: 24px; max-width: 720px; margin: 0 auto; font-family: sans-serif">
         <h1>Promeon Web｜Webサイト制作サービス</h1>
         <p>
-          中小企業・個人事業主・店舗向けに、分かりやすく安心して依頼できるWebサイト制作サービスを提供しています。
-          料金プランはMini（49,800円）・Standard（99,800円）・Pro（149,800円）の3種類です。
-          このサイトの詳細な内容をご覧いただくにはJavaScriptを有効にしてください。
+          中小企業・個人事業主向けに、チャット中心で依頼できるWebサイト制作サービスです。
+          基本プランは Mini（49,800円）・Standard（99,800円）・Pro（149,800円）（すべて税込）。
+          料金は内容により変動します。ご相談・お見積りは無料です。お問い合わせ：satokazu.promeon@gmail.com
         </p>
+        <p>詳しい内容をご覧いただくには JavaScript を有効にしてください。</p>
       </div>
     </noscript>
 
-    <!-- ===================== ヘッダー ===================== -->
-    <header class="site-header">
-      <div class="container">
-        <a href="#hero" class="site-logo" data-site-name>Promeon Web</a>
+    <div id="site-header"></div>
 
-        <button
-          id="nav-toggle"
-          class="nav-toggle"
-          type="button"
-          aria-label="メニューを開く"
-          aria-expanded="false"
-          aria-controls="site-nav"
-        >
-          <span></span><span></span><span></span>
-        </button>
-
-        <nav id="site-nav" class="site-nav" aria-label="サイト内メニュー">
-          <a href="#services">サービス</a>
-          <a href="#pricing">料金</a>
-          <a href="#flow">制作の流れ</a>
-          <a href="#samples">制作サンプル</a>
-          <a href="#faq">FAQ</a>
-          <a href="#contact">お問い合わせ</a>
-          <a href="/privacy.html">プライバシーポリシー</a>
-          <a href="#" data-contact="email" class="btn btn-primary nav-cta">メールで相談する</a>
-        </nav>
-      </div>
-    </header>
-
-    <main>
-      <!-- ===================== ファーストビュー ===================== -->
+    <main id="main">
+      <!-- ファーストビュー（左：文章／右：制作サイトのモックアップ） -->
       <section id="hero" class="hero">
-        <div class="container hero-inner">
-          <h1 id="hero-heading">小さな会社にも、ちゃんとしたWebサイトを。</h1>
-          <p id="hero-subcopy" class="hero-sub">
-            早く、分かりやすく、必要なものだけ。Webに詳しくなくても相談できるWeb制作サービスです。
-          </p>
-          <div class="hero-cta">
-            <a href="#contact" class="btn btn-primary">無料で相談する</a>
-            <a href="#pricing" class="btn btn-outline">料金を見る</a>
-          </div>
-          <ul class="hero-badges">
-            <li>原則24時間以内に返信</li>
-            <li>最短1時間〜相談可能</li>
-            <li>Web初心者も歓迎</li>
-          </ul>
-        </div>
-      </section>
-
-      <!-- ===================== よくある悩み ===================== -->
-      <section id="pain" class="section">
-        <div class="container">
-          <div class="section-head">
-            <span class="section-eyebrow">SITUATION</span>
-            <h2>こんなお悩みありませんか？</h2>
-          </div>
-          <ul id="pain-list" class="pain-list"><!-- src/config.js の painPoints から自動生成 --></ul>
-          <div class="pain-cta">
-            <p>そのお悩み、Promeon Webにご相談ください。</p>
-            <a href="#contact" class="btn btn-primary">無料で相談する</a>
-          </div>
-        </div>
-      </section>
-
-      <!-- ===================== サービス紹介 ===================== -->
-      <section id="services" class="section section-alt">
-        <div class="container">
-          <div class="section-head">
-            <span class="section-eyebrow">SERVICE</span>
-            <h2>サービス内容</h2>
-            <p>目的やご予算に合わせて、必要なWebサイトを制作します。</p>
-          </div>
-          <p class="services-lead">
-            AIを活用した制作フローで作業を効率化し、早く・分かりやすく・必要十分なWebサイトのご提供を目指しています。
-          </p>
-          <ul id="services-grid" class="card-grid"><!-- src/config.js の services から自動生成 --></ul>
-        </div>
-      </section>
-
-      <!-- ===================== 選ばれる理由 ===================== -->
-      <section id="strengths" class="section">
-        <div class="container">
-          <div class="section-head">
-            <span class="section-eyebrow">STRENGTH</span>
-            <h2>選ばれる理由</h2>
-          </div>
-          <ul id="strengths-grid" class="strengths-grid"><!-- src/config.js の strengths から自動生成 --></ul>
-        </div>
-      </section>
-
-      <!-- ===================== 料金プラン ===================== -->
-      <section id="pricing" class="section section-alt">
-        <div class="container">
-          <div class="section-head">
-            <span class="section-eyebrow">PRICING</span>
-            <h2>料金プラン</h2>
-            <p>3つのシンプルなプランからお選びいただけます。</p>
-          </div>
-          <ul id="pricing-grid" class="pricing-grid"><!-- src/config.js の pricingPlans から自動生成 --></ul>
-          <p class="pricing-note">
-            ※サイト内容・ページ数・機能によって料金が変わる場合があります。正式なお見積りは事前にご案内します。
-          </p>
-          <p class="payment-note">お支払い方法：<strong id="payment-methods"></strong></p>
-        </div>
-      </section>
-
-      <!-- ===================== 制作の流れ ===================== -->
-      <section id="flow" class="section">
-        <div class="container">
-          <div class="section-head">
-            <span class="section-eyebrow">FLOW</span>
-            <h2>制作の流れ</h2>
-          </div>
-          <div class="flow-lead">
-            <p>
-              ご相談から納品まで、原則Gmailを使ったテキストで対応します。Zoomなどのオンライン打ち合わせは必要ありません。
-            </p>
-            <p>
-              制作に必要な情報は、専用のヒアリングシートへご入力いただきます。回答内容をもとに制作するため、Zoomでの打ち合わせは必要ありません。<span
-                id="hearing-sheet-link"
-              ></span>
-            </p>
-          </div>
-          <ol id="flow-list" class="flow-list"><!-- src/config.js の flowSteps から自動生成 --></ol>
-        </div>
-      </section>
-
-      <!-- ===================== 制作サンプル ===================== -->
-      <section id="samples" class="section section-alt">
-        <div class="container">
-          <div class="section-head">
-            <span class="section-eyebrow">SAMPLE</span>
-            <h2>制作サンプル</h2>
-          </div>
-          <p class="samples-lead">
-            各料金プランで制作できるWebサイトのイメージをご確認いただけます。以下はサービス紹介用のデモサイトであり、実際のお客様の制作事例ではありません。完成したデモサイトから順次公開します。
-          </p>
-          <ul id="samples-grid" class="card-grid samples-grid"><!-- src/config.js の samples から自動生成 --></ul>
-        </div>
-      </section>
-
-      <!-- ===================== FAQ ===================== -->
-      <section id="faq" class="section">
-        <div class="container">
-          <div class="section-head">
-            <span class="section-eyebrow">FAQ</span>
-            <h2>よくある質問</h2>
-          </div>
-          <div id="faq-list" class="faq-list"><!-- src/config.js の faqs から自動生成 --></div>
-        </div>
-      </section>
-
-      <!-- ===================== お問い合わせ ===================== -->
-      <section id="contact" class="section contact-section">
-        <div class="container">
-          <div class="section-head">
-            <span class="section-eyebrow">CONTACT</span>
-            <h2>お問い合わせ</h2>
-            <p>お気軽にご相談ください。原則24時間以内の返信を心がけています。</p>
-          </div>
-
-          <div class="contact-grid">
-            <a href="#" data-contact="email" class="btn btn-primary contact-mail-cta"
-              >メールで相談する</a
-            >
-
-            <div class="contact-sub-links">
-              <a href="#" data-contact="line" target="_blank" rel="noopener">LINE</a>
-              <a href="#" data-contact="instagram" target="_blank" rel="noopener">Instagram</a>
-              <a href="#" data-contact="facebook" target="_blank" rel="noopener">Facebook</a>
-              <a href="#" data-contact="email">メール</a>
+        <div class="container hero-grid">
+          <div class="hero-text">
+            <h1 id="hero-heading">AIの速さと、人の丁寧さで。</h1>
+            <p id="hero-subcopy" class="hero-sub"></p>
+            <div class="hero-cta">
+              <a href="/contact/" class="btn btn-primary btn-lg">無料相談・無料見積り</a>
+              <a href="/samples/" class="btn btn-outline btn-lg">制作サンプルを見る</a>
             </div>
-
-            <p class="contact-email">
-              メールでのお問い合わせ：<a href="#" data-contact="email"
-                ><span data-contact-text="email">準備中</span></a
-              >
-            </p>
+            <p class="hero-cta-note" data-cta-note></p>
+            <ul id="hero-badges" class="hero-badges"></ul>
+            <p id="hero-caption" class="hero-caption"></p>
           </div>
+          <div
+            class="hero-media"
+            data-media="heroMockup|1600|1000|contain|eager"
+            data-media-alt="Promeon Web が制作したWebサイトのPC・スマートフォン表示"
+          ></div>
+        </div>
+      </section>
+
+      <!-- 顧客の悩み -->
+      <section id="pains" class="section">
+        <div class="container">
+          <div data-section-head="CHECK|こんなお悩みはありませんか？|"></div>
+          <ul id="home-pains" class="pain-grid"></ul>
+          <p id="home-pain-solution" class="pain-solution"></p>
+        </div>
+      </section>
+
+      <!-- 選ばれる理由（ナビ「サービス」のリンク先） -->
+      <section id="reasons" class="section">
+        <div class="container">
+          <div data-section-head="SERVICE|Promeon Webが選ばれる理由|チャット中心・明確な料金・AI活用の短納期・人による確認。"></div>
+          <ul id="home-reasons" class="reasons-grid"></ul>
+        </div>
+      </section>
+
+      <!-- 制作サンプル -->
+      <section id="samples-overview" class="section">
+        <div class="container">
+          <div data-section-head="SAMPLE|制作サンプル|各プランで作れるWebサイトのイメージです。すべてサービス紹介用の架空サンプルです。"></div>
+          <ul id="home-samples" class="card-grid samples-grid"></ul>
+          <p class="section-more">
+            <a href="/samples/" class="btn btn-outline">制作サンプルを詳しく見る</a>
+          </p>
+        </div>
+      </section>
+
+      <!-- 料金プラン（薄い暖色の背景で区切る） -->
+      <section id="plans-overview" class="section section-warm">
+        <div class="container">
+          <div data-section-head="PRICING|料金プラン|標準的な制作内容をまとめた基本プランです。内容により料金は変動します（すべて税込）。"></div>
+          <ul id="home-plans" class="pricing-grid"></ul>
+          <p class="section-more">
+            <a href="/plans/" class="btn btn-outline">料金・プランを詳しく見る</a>
+          </p>
+        </div>
+      </section>
+
+      <!-- AI活用の説明 -->
+      <section id="ai" class="section">
+        <div class="container">
+          <div data-section-head="AI &amp; HUMAN CHECK|AIの速さと、人の確認を組み合わせて制作します。|AIは下地づくりに活用し、内容と表示は人が確認します。"></div>
+          <div class="ai-layout">
+            <div
+              class="ai-media"
+              data-media="processDev|1200|800|cover"
+              data-media-alt="サイトを制作しているPC画面（AIを活用したコード制作）"
+            ></div>
+            <div id="home-ai" class="ai-wrap"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 制作の流れ（薄いグレーの背景で区切る） -->
+      <section id="flow-overview" class="section section-alt">
+        <div class="container">
+          <div data-section-head="FLOW|制作の流れ|チャットで相談 → ヒアリングシートに回答 → 制作 → 確認 → 修正・納品。Web会議は不要です。"></div>
+          <ol id="home-flow" class="flow-list flow-list--compact"></ol>
+          <p class="section-more">
+            <a href="/flow/" class="btn btn-outline">制作の流れを詳しく見る</a>
+          </p>
+        </div>
+      </section>
+
+      <!-- よくある質問（薄い暖色の背景で区切る） -->
+      <section id="faq-overview" class="section section-warm">
+        <div class="container">
+          <div data-section-head="FAQ|よくある質問|初めての方から多くいただく質問です。"></div>
+          <dl id="home-faq" class="faq-list"></dl>
+          <p class="section-more">
+            <a href="/faq/" class="btn btn-outline">よくある質問をすべて見る</a>
+          </p>
         </div>
       </section>
     </main>
 
-    <!-- ===================== フッター ===================== -->
-    <footer class="site-footer">
-      <div class="container footer-inner">
-        <div>
-          <div class="site-logo" data-site-name style="color: #fff">Promeon Web</div>
-          <p data-site-tagline style="margin: 6px 0 0; font-size: 0.82rem"></p>
-        </div>
-
-        <nav class="footer-links" aria-label="フッターメニュー">
-          <a href="#services">サービス</a>
-          <a href="#pricing">料金</a>
-          <a href="#faq">FAQ</a>
-          <a href="#contact">お問い合わせ</a>
-          <a href="/privacy.html">プライバシーポリシー</a>
-        </nav>
-
-        <p class="footer-copy">&copy; <span id="current-year"></span> Promeon Web</p>
-      </div>
-    </footer>
+    <div id="site-footer"></div>
   </body>
 </html>

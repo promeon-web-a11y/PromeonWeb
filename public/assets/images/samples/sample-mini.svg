@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 900" role="img" aria-label="Miniプラン 制作サンプル（リフォーム会社）の画面イメージ">
+  <title>sample-mini</title>
+  <desc>差し替え用: samples/sample-mini.webp（推奨 1440x900px, WebP）。Miniサンプル（リフォーム会社・1ページ）の実画面スクリーンショット。</desc>
+  <rect width="1440" height="900" fill="#F7F8FA"/>
+  <rect x="120" y="90" width="1200" height="720" rx="16" fill="#fff" stroke="#1c3a5e" stroke-width="4" opacity="0.9"/>
+  <rect x="120" y="90" width="1200" height="64" rx="16" fill="#1c3a5e" opacity="0.9"/>
+  <circle cx="160" cy="122" r="8" fill="#e8672a"/>
+  <circle cx="188" cy="122" r="8" fill="#fff" opacity="0.6"/>
+  <circle cx="216" cy="122" r="8" fill="#fff" opacity="0.6"/>
+  <g fill="#1c3a5e" opacity="0.13">
+    <rect x="180" y="210" width="1080" height="200" rx="10"/>
+    <rect x="180" y="450" width="1080" height="60" rx="8"/>
+    <rect x="180" y="540" width="520" height="180" rx="10"/>
+    <rect x="740" y="540" width="520" height="180" rx="10"/>
+  </g>
+  <rect x="180" y="330" width="240" height="46" rx="23" fill="#e8672a" opacity="0.85"/>
+  <text x="1260" y="128" text-anchor="end" font-family="Arial, sans-serif" font-size="30" font-weight="700" fill="#fff" opacity="0.85">Mini</text>
+</svg>

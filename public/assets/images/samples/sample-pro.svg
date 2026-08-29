@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 900" role="img" aria-label="Proプラン 制作サンプル（清掃会社）の画面イメージ">
+  <title>sample-pro</title>
+  <desc>差し替え用: samples/sample-pro.webp（推奨 1440x900px, WebP）。Proサンプル（清掃会社・複数ページ）の実画面スクリーンショット。</desc>
+  <rect width="1440" height="900" fill="#F7F8FA"/>
+  <rect x="120" y="90" width="1200" height="720" rx="16" fill="#fff" stroke="#1c3a5e" stroke-width="4" opacity="0.9"/>
+  <rect x="120" y="90" width="1200" height="64" rx="16" fill="#1c3a5e"/>
+  <circle cx="160" cy="122" r="8" fill="#e8672a"/>
+  <circle cx="188" cy="122" r="8" fill="#fff" opacity="0.6"/>
+  <circle cx="216" cy="122" r="8" fill="#fff" opacity="0.6"/>
+  <g fill="#1c3a5e" opacity="0.12">
+    <rect x="180" y="200" width="1080" height="180" rx="10"/>
+    <rect x="180" y="410" width="250" height="140" rx="10"/>
+    <rect x="460" y="410" width="250" height="140" rx="10"/>
+    <rect x="740" y="410" width="250" height="140" rx="10"/>
+    <rect x="1020" y="410" width="240" height="140" rx="10"/>
+    <rect x="180" y="585" width="1080" height="130" rx="10"/>
+  </g>
+  <g fill="#1c3a5e" opacity="0.5">
+    <rect x="180" y="168" width="60" height="12" rx="6"/>
+    <rect x="260" y="168" width="60" height="12" rx="6"/>
+    <rect x="340" y="168" width="60" height="12" rx="6"/>
+    <rect x="420" y="168" width="60" height="12" rx="6"/>
+    <rect x="500" y="168" width="60" height="12" rx="6"/>
+  </g>
+  <rect x="180" y="300" width="220" height="44" rx="22" fill="#e8672a" opacity="0.85"/>
+  <text x="1260" y="128" text-anchor="end" font-family="Arial, sans-serif" font-size="30" font-weight="700" fill="#fff" opacity="0.85">Pro</text>
+</svg>
