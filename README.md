@@ -174,8 +174,9 @@ promeon-web/
 - 支払い方法は「銀行振込」「クレジットカード」のみ。
 - お問い合わせは、公式LINE・定型文入り `mailto:` リンクに加えて、`/contact/` 最下部に
   問い合わせフォーム（`#inquiry-form`）を設置しています。送信は Vercel サーバーレス関数
-  `api/contact.js` が受け取り、メール送信サービス Resend 経由で管理者宛メールに変換します。
-  API キー等の秘密情報はすべて環境変数で管理し、フロントには一切含めません（下記「お問い合わせフォーム」参照）。
+  `api/contact.js` が受け取り、`RESEND_API_KEY` があれば Resend、無ければ FormSubmit
+  （APIキー不要）で管理者宛メールに変換します。秘密情報はすべて環境変数で管理し、
+  フロントには一切含めません（下記「お問い合わせフォーム」参照）。
 - 公式LINEのQRコードは `npx qrcode`（オフライン生成）で作成。外部のQR生成サービスには依存していません。
 - `canonical` / `og:url` は正式ドメイン未確定のため、アクセス先URLから JavaScript で生成（架空ドメインは設定しません）。
 - 各ページ個別の `title` / `meta description` / OGP を HTML に静的記述。JS無効時のフォールバックを `<noscript>` に用意。
@@ -195,59 +196,52 @@ promeon-web/
 | 受信処理（サーバー側） | `api/contact.js`（Vercel サーバーレス関数） |
 | スタイル | `src/style.css` 末尾の「無料相談・お問い合わせフォーム」ブロック |
 
+### 送信方式（2通り。自動で切り替わる）
+
+`api/contact.js` は環境変数 `RESEND_API_KEY` の有無で送信方式を切り替えます。
+
+| 条件 | 方式 | 必要な準備 |
+| --- | --- | --- |
+| `RESEND_API_KEY` **なし**（既定） | **FormSubmit**（https://formsubmit.co、APIキー不要） | 初回だけ、届け先メールに届く「Activate Form」リンクを1度クリック |
+| `RESEND_API_KEY` **あり** | **Resend** | Vercel に `RESEND_API_KEY` を登録 → Redeploy |
+
+どちらの方式でも：To は `satokazu.promeon@gmail.com` 固定（`CONTACT_TO_EMAIL` で上書き可）、
+件名 `【Promeon Web】新しいお問い合わせ`、Reply-To は問い合わせ者のメールアドレス。
+本文：お名前／会社名・屋号／メールアドレス／お問い合わせ種別／現在サイトの有無・URL／ご予算／希望納期／お問い合わせ内容／送信日時／送信元IP。
+
 ### 送信の流れ
 
 1. ブラウザ側で必須・メール形式・URL形式・プライバシー同意をチェック → ボタンを `disabled`（二重送信防止）＋「送信中...」
 2. 問題なければ `POST /api/contact`（JSON）
 3. `api/contact.js` がサーバー側でも再チェック＋スパム対策（ハニーポット `website` ／送信までの経過時間 `elapsed_ms` ／簡易レート制限 60秒3回）
-4. メール送信サービス **Resend** の API（`https://api.resend.com/emails`）で
-   `satokazu.promeon@gmail.com`（既定。`CONTACT_TO_EMAIL` で上書き可）宛にメール送信。
-   件名は `【Promeon Web】新しいお問い合わせ`、`reply_to` に問い合わせ者のメールアドレスを設定。
-5. **Resend が 2xx を返したときだけ** フロントに `{ ok: true }` を返し「お問い合わせを送信しました。」と表示。
-   失敗時（キー未設定 500／Resend エラー 502 など）は「送信に失敗しました。時間をおいて再度お試しください。」
+4. 上表の方式でメール送信（サーバー側のみ。APIキーはブラウザに出さない）
+5. **HTTP 200 かつ `success:true` のときだけ** 「お問い合わせを送信しました。」を表示。
+   それ以外は「送信に失敗しました。時間をおいて再度お試しください。」
 
-メール本文：お名前／会社名・屋号／メールアドレス／お問い合わせ種別／現在サイトの有無・URL／ご予算／希望納期／お問い合わせ内容／送信日時／送信元IP。
+### 環境変数（すべて任意。`.env.example` 参照）
 
-### 必要な環境変数（`.env.example` を参照）
+| 変数名 | 用途 |
+| --- | --- |
+| `RESEND_API_KEY` | 設定すると Resend 方式に切り替わる（`re_` で始まる） |
+| `CONTACT_TO_EMAIL` | 届け先の変更（未設定で `satokazu.promeon@gmail.com`） |
+| `CONTACT_FROM_EMAIL` | Resend 使用時の差出人（未設定で `onboarding@resend.dev`） |
 
-| 変数名 | 用途 | 必須 |
+- 秘密情報はコードに書かず環境変数で管理。`.env` は `.gitignore` 済みで GitHub に出ません。
+- `api/` はリポジトリ直下に置くと Vercel が自動でサーバーレス関数化します（`vercel.json` 不要）。
+
+### 動作確認
+
+- `GET /api/contact` → `{"success":true,"method":"formsubmit" or "resend","to":"...","note":"..."}` を返す（秘密情報なし）。
+- 送信失敗時、ブラウザの **開発者ツール → Console** に `[inquiry] 送信失敗: {...}`（`httpStatus`/`error`/`detail`）が出ます。
+- サーバー側の詳細は Vercel の **Deployment → Functions → `api/contact` の Logs**（`[contact] ...`）。
+
+### うまく届かないときの切り分け
+
+| Console / Logs | 原因 | 対処 |
 | --- | --- | --- |
-| `RESEND_API_KEY` | Resend（https://resend.com）の API キー（`re_` で始まる）。**これだけ登録すれば動きます。** | **必須** |
-| `CONTACT_TO_EMAIL` | 届け先。未設定なら `satokazu.promeon@gmail.com` | 任意 |
-| `CONTACT_FROM_EMAIL` | 差出人。未設定なら Resend テスト用 `Promeon Web <onboarding@resend.dev>` | 任意 |
-
-- **秘密情報はコードに書かず、必ず環境変数で管理**します（`RESEND_API_KEY` のみが秘密。届け先アドレスは公開情報のためコード既定値あり）。
-  `.env` は `.gitignore` 済みで GitHub には push されません。
-- テスト用差出人（`onboarding@resend.dev`）を使う場合、Resend は「登録アカウントのアドレス」宛にしか送れません。
-  → **Resend には `satokazu.promeon@gmail.com` で登録**してください。独自ドメインを Resend で認証すれば任意宛先に送れます。
-- 本番（Vercel）：Project → Settings → Environment Variables に `RESEND_API_KEY` を追加（Production / Preview 両方）→ **Redeploy**。
-  `api/` ディレクトリは Vercel が自動でサーバーレス関数として認識します（`vercel.json` 不要）。
-
-### ローカルでの確認
-
-```bash
-cp .env.example .env       # RESEND_API_KEY に本物のキーを入れる
-npm run dev                # http://localhost:5173/contact/#inquiry-form
-```
-
-- 動作確認用：`GET /api/contact` が
-  `{"success":true,"configured":<true/false>,"to":"...","from":"..."}` を返します
-  （キーの設定有無・宛先・差出人を確認できる。秘密情報は返しません）。
-- `.env`（キー）が無い場合、送信は「送信に失敗しました」表示になります（見た目・入力チェックの確認は可能）。
-- ダミーキーを入れると、サーバーログに `[contact] sending via Resend ...` → `Resend error: status=401 ...`
-  が出て、実際に送信処理が走っていることを確認できます。
-
-### うまく届かないときの切り分け手順
-
-送信すると「送信に失敗しました」になる場合、原因は次のいずれかです。ブラウザの
-**開発者ツール → Console** に `[inquiry] 送信失敗: {...}` が出るので、その `httpStatus` と `error` で判別します。
-（あわせて Network タブで `POST /api/contact` のステータス、Vercel の **Deployment → Functions → `api/contact` のログ** も確認）
-
-| Console / Network の内容 | 原因 | 対処 |
-| --- | --- | --- |
-| `error:"not_configured"` / httpStatus 500、または `GET /api/contact` が `configured:false` | Vercel に `RESEND_API_KEY` が無い（または登録後に再デプロイしていない） | Vercel に `RESEND_API_KEY` を登録 → **Redeploy** |
-| `error:"send_failed"`, `detail.resendStatus:401` | API キーが誤り／失効 | Resend でキーを再発行して登録し直す |
-| `error:"send_failed"`, `detail.resendStatus:403` | テスト差出人のまま、Resend 登録アドレス以外へ送ろうとしている | Resend に `satokazu.promeon@gmail.com` で登録する（または独自ドメインを Resend で認証） |
-| `error:"send_failed"`, `detail.resendStatus:422` | From アドレスが不正（`@gmail.com` を直接指定など） | `CONTACT_FROM_EMAIL` を消して既定の `onboarding@resend.dev` に戻す |
-| httpStatus 404 / `fetch 失敗` | 関数が配信されていない | Vercel の Framework Preset＝Vite、Root Directory がリポジトリ直下か確認。`api/contact.js` がリポジトリ直下 `api/` にあること（`src/` の中はNG） |
-| httpStatus 429 | 短時間に送りすぎ（60秒で3回まで） | 少し待って再送 |
+| `error:"activation_required"` / Logs に `This form needs Activation` | FormSubmit の初回確認が未完了 | `satokazu.promeon@gmail.com` に届く FormSubmit のメールの「Activate Form」を1度クリック |
+| `error:"send_failed"`, `detail.via:"formsubmit"`, Logs に `open this page through a web server` | FormSubmit に送信元サイトが伝わっていない | 実サイト（`https://...`）から送信しているか確認（ローカルの `file://` は不可） |
+| `error:"send_failed"`, `detail.via:"resend"`, `detail.status:401` | Resend の API キーが誤り／失効 | キーを再発行して Vercel に登録し直す → Redeploy |
+| `error:"send_failed"`, `detail.via:"resend"`, `detail.status:403` | Resend テスト差出人のまま登録アドレス以外へ送信 | Resend に `satokazu.promeon@gmail.com` で登録、または独自ドメインを認証 |
+| `httpStatus 404` / `fetch 失敗` | 関数が配信されていない | Vercel の Framework Preset＝Vite、Root Directory がリポジトリ直下、`api/contact.js` が直下 `api/` にあるか確認 |
+| `httpStatus 429` | 短時間に送りすぎ（60秒3回） | 少し待って再送 |

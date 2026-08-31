@@ -4,23 +4,23 @@
 //  フロー：
 //    /contact/ のフォーム
 //      → POST /api/contact（このファイル：Vercel Serverless Function）
-//      → Resend API（https://api.resend.com/emails）
+//      → メール送信（下記のどちらか）
+//          1) RESEND_API_KEY があれば Resend で送信（推奨）
+//          2) 無ければ FormSubmit（https://formsubmit.co）で送信（APIキー不要）
 //      → satokazu.promeon@gmail.com（To 固定）
 //
 //  秘密情報は環境変数からのみ読み込みます（フロントには一切出しません）。
-//    RESEND_API_KEY      … Resend の API キー（re_xxx）              ← 必須
-//    CONTACT_TO_EMAIL    … 届け先。未設定なら下の既定アドレス        ← 任意
-//    CONTACT_FROM_EMAIL  … 差出人。未設定なら Resend テスト用アドレス ← 任意
+//    RESEND_API_KEY      … Resend の API キー（re_xxx）。無くても FormSubmit で動作 ← 任意
+//    CONTACT_TO_EMAIL    … 届け先。未設定なら下の既定アドレス                     ← 任意
+//    CONTACT_FROM_EMAIL  … Resend 使用時の差出人。未設定なら Resend テスト用       ← 任意
 //
-//  レスポンスは Node 標準の res で書き出しています
-//  （vite.config.js の開発用プラグインからも同じ関数を呼び出すため）。
+//  ★ FormSubmit は「そのメールアドレス宛の初回送信」で確認メールを1通送ります。
+//     受信箱に届く FormSubmit の確認リンクを1度クリックすれば、以降ずっと転送されます。
 // ==============================================================
 
 // To の既定値（秘密情報ではありません。公開サイトにも記載のあるアドレス）。
-// CONTACT_TO_EMAIL を設定すればそちらが優先されます。
 const DEFAULT_TO_EMAIL = "satokazu.promeon@gmail.com";
-// From の既定値。Resend が用意する共有送信元で、ドメイン認証なしで使えます。
-// ※ @gmail.com などを From に指定すると Resend は送信を拒否します。ここは変更しないでください。
+// Resend 使用時の From 既定値（Resend 共有送信元。@gmail.com を From にすると拒否されます）。
 const DEFAULT_FROM_EMAIL = "Promeon Web <onboarding@resend.dev>";
 const MAIL_SUBJECT = "【Promeon Web】新しいお問い合わせ";
 
@@ -65,14 +65,12 @@ function sendJson(res, status, obj) {
   res.statusCode = status;
   res.setHeader("Content-Type", "application/json; charset=utf-8");
   res.setHeader("Cache-Control", "no-store");
-  // success と ok の両方を返す（フロントはどちらで判定してもよい）
   const withFlags =
     typeof obj.ok === "boolean" ? { success: obj.ok, ...obj } : obj;
   res.end(JSON.stringify(withFlags));
 }
 
 async function readBody(req) {
-  // Vercel は application/json を自動パースして req.body に入れる
   if (req.body && typeof req.body === "object") return req.body;
   if (typeof req.body === "string") {
     try {
@@ -81,7 +79,6 @@ async function readBody(req) {
       return {};
     }
   }
-  // 生の Node ストリーム（ローカル開発時）
   const chunks = [];
   for await (const chunk of req) chunks.push(chunk);
   if (chunks.length === 0) return {};
@@ -98,21 +95,132 @@ function clientIp(req) {
   return req.socket?.remoteAddress || "unknown";
 }
 
-// 前後空白の除去＋制御文字（タブ・改行は残す）を落とす。危険な入力への基本対策。
 function str(v) {
   if (typeof v !== "string") return "";
   return v.replace(CONTROL_RE, "").trim();
 }
 
-// 1行用（改行・タブも除去）。メールアドレスなど1行で扱う値向け。
 function oneLine(v) {
   return str(v)
     .replace(/[\r\n\t]+/g, " ")
     .trim();
 }
 
+// ---- Resend 経由の送信 --------------------------------------------------------
+async function sendViaResend({ apiKey, from, to, replyTo, subject, text }) {
+  let resp;
+  let raw = "";
+  try {
+    resp = await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${apiKey}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        from,
+        to: [to],
+        reply_to: replyTo,
+        subject,
+        text,
+      }),
+    });
+    raw = await resp.text().catch(() => "");
+  } catch (err) {
+    return {
+      ok: false,
+      via: "resend",
+      stage: "fetch",
+      status: 0,
+      code: String((err && err.message) || "fetch_error"),
+    };
+  }
+  let parsed = {};
+  try {
+    parsed = JSON.parse(raw);
+  } catch {
+    /* 空 or 非 JSON */
+  }
+  if (!resp.ok) {
+    return {
+      ok: false,
+      via: "resend",
+      stage: "resend",
+      status: resp.status,
+      code: String((parsed && (parsed.name || parsed.error)) || ""),
+      message: (parsed && parsed.message) || raw,
+    };
+  }
+  return { ok: true, via: "resend", id: (parsed && parsed.id) || "" };
+}
+
+// ---- FormSubmit 経由の送信（APIキー不要）------------------------------------
+// FormSubmit の AJAX エンドポイントは、送信元サイトを識別するため Referer/Origin を要求します。
+// ブラウザ → /api/contact のリクエストに付く Referer/Origin をそのまま中継します。
+async function sendViaFormsubmit({ to, replyTo, name, subject, text, siteUrl }) {
+  const url = `https://formsubmit.co/ajax/${to}`;
+  const origin = (() => {
+    try {
+      return new URL(siteUrl).origin;
+    } catch {
+      return siteUrl || "";
+    }
+  })();
+  let resp;
+  let raw = "";
+  try {
+    resp = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        "User-Agent":
+          "Mozilla/5.0 (compatible; PromeonWebContact/1.0; +https://formsubmit.co)",
+        ...(siteUrl ? { Referer: siteUrl } : {}),
+        ...(origin ? { Origin: origin } : {}),
+      },
+      body: JSON.stringify({
+        name,
+        email: replyTo, // FormSubmit はこれを Reply-To に使う
+        _subject: subject,
+        _template: "table",
+        _captcha: "false",
+        message: text,
+      }),
+    });
+    raw = await resp.text().catch(() => "");
+  } catch (err) {
+    return {
+      ok: false,
+      via: "formsubmit",
+      stage: "fetch",
+      status: 0,
+      code: String((err && err.message) || "fetch_error"),
+    };
+  }
+  let parsed = {};
+  try {
+    parsed = JSON.parse(raw);
+  } catch {
+    /* 非 JSON */
+  }
+  const succeeded = parsed && String(parsed.success) === "true";
+  if (resp.ok && succeeded) {
+    return { ok: true, via: "formsubmit", id: "" };
+  }
+  const msg = String((parsed && parsed.message) || raw || "");
+  const needsActivation = /activat|confirm|verify/i.test(msg);
+  return {
+    ok: false,
+    via: "formsubmit",
+    stage: needsActivation ? "activation_required" : "formsubmit",
+    status: resp.status,
+    code: needsActivation ? "activation_required" : "send_failed",
+    message: msg,
+  };
+}
+
 export default async function handler(req, res) {
-  // CORS プリフライト（基本は同一オリジンなので発生しないが念のため）
   if (req.method === "OPTIONS") {
     res.setHeader("Allow", "POST, GET, OPTIONS");
     res.statusCode = 204;
@@ -121,14 +229,18 @@ export default async function handler(req, res) {
 
   // 動作確認用：GET は設定状況だけ返す（秘密情報は返さない）
   if (req.method === "GET") {
+    const useResend = Boolean(process.env.RESEND_API_KEY);
     return sendJson(res, 200, {
       ok: true,
       endpoint: "/api/contact",
       runtime: "vercel-serverless",
-      configured: Boolean(process.env.RESEND_API_KEY),
+      method: useResend ? "resend" : "formsubmit",
+      resendConfigured: useResend,
       to: process.env.CONTACT_TO_EMAIL || DEFAULT_TO_EMAIL,
-      toOverridden: Boolean(process.env.CONTACT_TO_EMAIL),
       from: process.env.CONTACT_FROM_EMAIL || DEFAULT_FROM_EMAIL,
+      note: useResend
+        ? "Resend で送信します。"
+        : "FormSubmit で送信します。初回のみ届け先メールに届く確認リンクのクリックが必要です。",
     });
   }
 
@@ -144,13 +256,13 @@ export default async function handler(req, res) {
     return sendJson(res, 400, { ok: false, error: "invalid_body" });
   }
 
-  // --- スパム対策：ハニーポット（人には見えない項目）---
+  // --- スパム対策：ハニーポット ---
   if (str(data.website) !== "" || str(data.company_url_confirm) !== "") {
     console.warn("[contact] honeypot hit -> dropped");
     return sendJson(res, 200, { ok: true, dropped: true });
   }
 
-  // --- スパム対策：フォーム表示から送信までの経過時間 ---
+  // --- スパム対策：送信までの経過時間 ---
   const elapsed = Number(data.elapsed_ms);
   if (Number.isFinite(elapsed) && elapsed >= 0 && elapsed < 2000) {
     console.warn("[contact] submitted too fast -> dropped");
@@ -209,26 +321,22 @@ export default async function handler(req, res) {
   hits.push(now);
   recent.set(ip, hits);
 
-  // --- 送信に必要な設定 ---
+  // --- 送信設定 ---
   const apiKey = process.env.RESEND_API_KEY;
   const to = process.env.CONTACT_TO_EMAIL || DEFAULT_TO_EMAIL;
   const from = process.env.CONTACT_FROM_EMAIL || DEFAULT_FROM_EMAIL;
 
-  // API キーが無いと実際の送信はできない。「見た目だけ成功」にはしない。
-  if (!apiKey) {
-    console.error(
-      "[contact] RESEND_API_KEY is not set. Add it to Vercel > Settings > Environment Variables (Production & Preview) and redeploy."
-    );
-    return sendJson(res, 500, {
-      ok: false,
-      error: "not_configured",
-      message: FAIL_MESSAGE,
-    });
-  }
+  // 送信元サイトの URL（FormSubmit の識別用）。ブラウザの Referer / Origin、
+  // 無ければ Host ヘッダから組み立てる。
+  const proto =
+    (req.headers["x-forwarded-proto"] || "").toString().split(",")[0] || "https";
+  const sourceUrl =
+    oneLine(req.headers.referer) ||
+    oneLine(req.headers.origin) ||
+    (req.headers.host ? `${proto}://${req.headers.host}/contact/` : "");
 
-  // --- メール本文（プレーンテキスト送信：HTML は解釈されません）---
   const sentAt = new Date().toLocaleString("ja-JP", { timeZone: "Asia/Tokyo" });
-  const lines = [
+  const text = [
     "Promeon Web サイトのお問い合わせフォームから送信がありました。",
     "",
     `お名前：${name}`,
@@ -246,65 +354,54 @@ export default async function handler(req, res) {
     "----",
     `送信日時：${sentAt}`,
     `送信元IP：${ip}`,
-  ];
+  ].join("\n");
 
-  // --- Resend でメール送信 ---
-  console.log(
-    `[contact] sending via Resend (from="${from}", to="${to}", reply_to="${email}")`
-  );
-  let resp;
-  let raw = "";
-  try {
-    resp = await fetch("https://api.resend.com/emails", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${apiKey}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        from,
-        to: [to],
-        reply_to: email, // 問い合わせ者へ返信しやすいように
-        subject: MAIL_SUBJECT,
-        text: lines.join("\n"),
-      }),
+  // Resend キーがあれば Resend、無ければ FormSubmit
+  let result;
+  if (apiKey) {
+    console.log(`[contact] sending via Resend (to="${to}", reply_to="${email}")`);
+    result = await sendViaResend({
+      apiKey,
+      from,
+      to,
+      replyTo: email,
+      subject: MAIL_SUBJECT,
+      text,
     });
-    raw = await resp.text().catch(() => "");
-  } catch (err) {
-    console.error("[contact] fetch to Resend threw:", err && err.message);
-    return sendJson(res, 502, {
-      ok: false,
-      error: "send_failed",
-      stage: "fetch",
-      message: FAIL_MESSAGE,
-    });
-  }
-
-  let parsed = {};
-  try {
-    parsed = JSON.parse(raw);
-  } catch {
-    /* 空 or 非 JSON */
-  }
-
-  if (!resp.ok) {
-    // 秘密情報（APIキー等）はブラウザへ返さない。
-    // Resend の HTTP ステータスとエラー名だけは、原因調査用にレスポンス・ログへ含める。
-    const resendCode = parsed && (parsed.name || parsed.error || "");
-    const resendMsg = parsed && parsed.message ? String(parsed.message) : raw;
-    console.error(
-      `[contact] Resend error: status=${resp.status} name=${resendCode} message=${resendMsg}`
+  } else {
+    console.warn(
+      "[contact] RESEND_API_KEY not set -> sending via FormSubmit (no API key needed)"
     );
-    return sendJson(res, 502, {
+    result = await sendViaFormsubmit({
+      to,
+      replyTo: email,
+      name,
+      subject: MAIL_SUBJECT,
+      text,
+      siteUrl: sourceUrl,
+    });
+  }
+
+  if (!result.ok) {
+    console.error(
+      `[contact] send failed: via=${result.via} stage=${result.stage} status=${result.status} code=${result.code} message=${result.message || ""}`
+    );
+    const activation = result.code === "activation_required";
+    return sendJson(res, activation ? 503 : 502, {
       ok: false,
-      error: "send_failed",
-      stage: "resend",
-      detail: { resendStatus: resp.status, resendCode: String(resendCode || "") },
+      error: activation ? "activation_required" : "send_failed",
+      stage: result.stage || null,
+      detail: {
+        via: result.via,
+        status: result.status || null,
+        code: result.code || null,
+      },
       message: FAIL_MESSAGE,
     });
   }
 
-  const sentId = (parsed && parsed.id) || "";
-  console.log(`[contact] sent OK (Resend id=${sentId || "unknown"})`);
-  return sendJson(res, 200, { ok: true, id: sentId });
+  console.log(
+    `[contact] sent OK: via=${result.via} id=${result.id || "-"} to=${to}`
+  );
+  return sendJson(res, 200, { ok: true, via: result.via, id: result.id || "" });
 }
