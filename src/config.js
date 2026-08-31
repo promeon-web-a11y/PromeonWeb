@@ -48,7 +48,8 @@ export const siteConfig = {
   // 共通ナビゲーション（ヘッダー・フッター共通）
   //   href はサイトルートからの絶対パス。末尾 "/" を含めてください。
   //   "#" を含む項目はトップページ内セクションへのリンクです。
-  //   「お問い合わせ」はナビに置かず、主要CTA（無料相談・無料見積り）へ統合しています。
+  //   「お問い合わせ」はこの nav 配列には入れず、ヘッダーでのみ末尾に通常リンクとして
+  //   自動追加します（primaryCta.headerLabel / primaryCta.href）。フッターには出しません。
   // ------------------------------------------------------------
   nav: [
     { label: "サービス", href: "/#reasons" },
@@ -59,12 +60,13 @@ export const siteConfig = {
   ],
 
   // 主要CTA（ページ内・フッターで使用。相談＝見積りも無料であることを明示）
-  //   headerLabel … PC/モバイルのヘッダーCTAだけ「無料相談はこちら」に一本化。
+  //   headerLabel … ヘッダーのナビ末尾に出す項目名。他のメニューと同じ通常リンク（ボタンにしない）。
+  //     遷移先は href。現在は「お問い合わせ」。
   //   label / labelShort … 完全オーダーメイド等、ページ内のCTAで使用（従来どおり）。
   primaryCta: {
     label: "無料相談・無料見積り",
     labelShort: "無料相談・見積り",
-    headerLabel: "無料相談はこちら",
+    headerLabel: "お問い合わせ",
     href: "/contact/",
   },
   ctaSupportNote:
@@ -77,6 +79,19 @@ export const siteConfig = {
     { label: "無料相談・見積り", href: "/contact/", style: "primary" },
     { label: "料金を見る", href: "/plans/", style: "outline" },
   ],
+
+  // 全ページ右下に常時表示するフローティング問い合わせボタン。
+  //   href … 無料相談ページ内の問い合わせフォーム（アンカーID: inquiry-form）へ。
+  //   labelPc / labelSp … PC は長め、スマホは短めの表示。
+  //   bubble … 初回のみ一時表示する小さな吹き出し（スマホ・問い合わせページでは非表示）。
+  floatingContact: {
+    href: "/contact/#inquiry-form",
+    icon: "💬",
+    labelPc: "無料相談・お問い合わせ",
+    labelSp: "無料相談",
+    ariaLabel: "無料相談・お問い合わせフォームへ移動する",
+    bubble: "Web制作について無料で相談できます",
+  },
 
   // ------------------------------------------------------------
   // 連絡先・SNSリンク（未確定は "" のまま）

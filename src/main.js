@@ -10,6 +10,7 @@ import {
   esc,
   renderHeader,
   renderFooter,
+  renderFloatingContact,
   sectionHeading,
   mediaFrame,
   planCard,
@@ -47,6 +48,11 @@ function mountChrome() {
   const footerMount = document.getElementById("site-footer");
   if (headerMount) headerMount.outerHTML = renderHeader(window.location.pathname);
   if (footerMount) footerMount.outerHTML = renderFooter();
+
+  // 全ページ右下の常時表示フローティング問い合わせボタン
+  if (!document.querySelector("[data-floating-contact]")) {
+    document.body.insertAdjacentHTML("beforeend", renderFloatingContact());
+  }
 }
 
 /** ロゴ画像が読み込めない場合だけ文字「Promeon Web」を表示（ヘッダー・フッター両方） */
@@ -551,6 +557,290 @@ function setupStickyCta() {
 }
 
 /* -------------------------------------------------------------
+ * 右下フローティング問い合わせボタン（＋初回のみの吹き出し）
+ * ----------------------------------------------------------- */
+
+const INQUIRY_HASH = "#inquiry-form";
+const BUBBLE_STORAGE_KEY = "promeonFloatingBubbleSeen";
+
+/** パス末尾の index.html / 余分なスラッシュを取り除いて比較しやすくする */
+function normalizePath(path) {
+  return path.replace(/index\.html$/, "").replace(/\/+$/, "") || "/";
+}
+
+function scrollToInquiryForm(smooth) {
+  const target = document.getElementById("inquiry-form");
+  if (!target) return false;
+  target.scrollIntoView({ behavior: smooth ? "smooth" : "auto", block: "start" });
+  return true;
+}
+
+function setupFloatingContact() {
+  const wrap = document.querySelector("[data-floating-contact]");
+  if (!wrap) return;
+
+  const link = wrap.querySelector(".floating-contact__btn");
+  if (link) {
+    link.addEventListener("click", (e) => {
+      let dest;
+      try {
+        dest = new URL(link.href, window.location.href);
+      } catch {
+        return;
+      }
+      // 同一ページ内なら、遷移せずフォームまでスムーズスクロール
+      if (normalizePath(dest.pathname) === normalizePath(window.location.pathname)) {
+        if (scrollToInquiryForm(true)) {
+          e.preventDefault();
+          if (window.history && history.replaceState) {
+            history.replaceState(null, "", INQUIRY_HASH);
+          }
+        }
+      }
+      // 別ページからの場合は通常遷移（遷移先で hash によりフォーム位置へ移動）
+    });
+  }
+
+  // 初回のみの小さな吹き出し（スマホ・問い合わせページ・低モーション設定では出さない）
+  const bubble = wrap.querySelector("[data-floating-bubble]");
+  if (!bubble) return;
+
+  const isSmallScreen = window.matchMedia("(max-width: 640px)").matches;
+  const onContactPage = normalizePath(window.location.pathname) === "/contact";
+  let alreadySeen = true;
+  try {
+    alreadySeen = localStorage.getItem(BUBBLE_STORAGE_KEY) === "1";
+  } catch {
+    alreadySeen = true; // localStorage が使えない環境ではしつこく出さない
+  }
+
+  if (isSmallScreen || onContactPage || alreadySeen) return;
+
+  try {
+    localStorage.setItem(BUBBLE_STORAGE_KEY, "1");
+  } catch {
+    /* 保存できなくても表示は継続する */
+  }
+
+  // 表示・非表示は has-bubble クラス（CSS でフェード）で制御する
+  bubble.hidden = false;
+  window.setTimeout(() => wrap.classList.add("has-bubble"), 1400);
+  window.setTimeout(() => wrap.classList.remove("has-bubble"), 8000);
+}
+
+/* -------------------------------------------------------------
+ * 無料相談・お問い合わせフォーム
+ * ----------------------------------------------------------- */
+
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const URL_RE = /^https?:\/\/[^\s]+\.[^\s]+/i;
+
+function setupInquiryForm() {
+  const form = document.getElementById("inquiry-form-el");
+  if (!form) return;
+
+  const submitBtn = form.querySelector("[data-inquiry-submit]");
+  const alertBox = form.querySelector("[data-inquiry-alert]");
+  const successBox = document.querySelector("[data-inquiry-success]");
+  const siteUrlField = form.querySelector("[data-site-url-field]");
+  const siteUrlInput = form.querySelector("#if-siteurl");
+  const elapsedInput = form.querySelector("[data-inquiry-elapsed]");
+  const startedAt = Date.now();
+
+  const fieldError = (name) =>
+    form.querySelector(`.form-error[data-error-for="${name}"]`);
+
+  function setError(name, message) {
+    const el = fieldError(name);
+    const input = form.querySelector(`[name="${name}"]`);
+    if (el) {
+      el.textContent = message ? `⚠ ${message}` : "";
+      el.hidden = !message;
+    }
+    if (input) {
+      if (message) input.setAttribute("aria-invalid", "true");
+      else input.removeAttribute("aria-invalid");
+      // ラジオはグループ全体
+      if (input.type === "radio") {
+        form.querySelectorAll(`[name="${name}"]`).forEach((r) => {
+          if (message) r.setAttribute("aria-invalid", "true");
+          else r.removeAttribute("aria-invalid");
+        });
+      }
+    }
+  }
+
+  function clearAllErrors() {
+    form.querySelectorAll(".form-error").forEach((el) => {
+      el.textContent = "";
+      el.hidden = true;
+    });
+    form
+      .querySelectorAll('[aria-invalid="true"]')
+      .forEach((el) => el.removeAttribute("aria-invalid"));
+    if (alertBox) {
+      alertBox.textContent = "";
+      alertBox.hidden = true;
+    }
+  }
+
+  // 「はい」を選んだときだけ URL 欄を表示
+  function syncSiteUrlVisibility() {
+    const checked = form.querySelector('[name="hasSite"]:checked');
+    const show = checked && checked.value === "はい";
+    if (siteUrlField) siteUrlField.hidden = !show;
+    if (!show) {
+      if (siteUrlInput) siteUrlInput.value = "";
+      setError("siteUrl", "");
+    }
+  }
+  form.querySelectorAll("[data-has-site]").forEach((radio) => {
+    radio.addEventListener("change", syncSiteUrlVisibility);
+  });
+  syncSiteUrlVisibility();
+
+  function validate() {
+    clearAllErrors();
+    const data = new FormData(form);
+    let firstInvalid = null;
+
+    const requireField = (name, message) => {
+      const value = String(data.get(name) || "").trim();
+      if (!value) {
+        setError(name, message);
+        if (!firstInvalid) firstInvalid = form.querySelector(`[name="${name}"]`);
+        return false;
+      }
+      return true;
+    };
+
+    requireField("name", "お名前を入力してください。");
+
+    const email = String(data.get("email") || "").trim();
+    if (!email) {
+      setError("email", "メールアドレスを入力してください。");
+      if (!firstInvalid) firstInvalid = form.querySelector('[name="email"]');
+    } else if (!EMAIL_RE.test(email)) {
+      setError("email", "メールアドレスの形式が正しくありません。");
+      if (!firstInvalid) firstInvalid = form.querySelector('[name="email"]');
+    }
+
+    requireField("category", "ご相談内容を選択してください。");
+
+    // URL 欄が表示されていて入力がある場合のみ形式チェック（任意項目）
+    if (siteUrlField && !siteUrlField.hidden) {
+      const url = String(data.get("siteUrl") || "").trim();
+      if (url && !URL_RE.test(url)) {
+        setError(
+          "siteUrl",
+          "URLの形式が正しくありません（https:// から始まる形式でご入力ください）。"
+        );
+        if (!firstInvalid) firstInvalid = siteUrlInput;
+      }
+    }
+
+    requireField("message", "ご相談・お問い合わせ内容を入力してください。");
+
+    if (!form.querySelector("#if-privacy").checked) {
+      setError("privacy", "プライバシーポリシーへの同意が必要です。");
+      if (!firstInvalid) firstInvalid = form.querySelector("#if-privacy");
+    }
+
+    if (firstInvalid) {
+      firstInvalid.focus({ preventScroll: false });
+      return null;
+    }
+
+    return {
+      name: String(data.get("name") || "").trim(),
+      company: String(data.get("company") || "").trim(),
+      email,
+      category: String(data.get("category") || "").trim(),
+      hasSite: String(data.get("hasSite") || "").trim(),
+      siteUrl:
+        siteUrlField && !siteUrlField.hidden
+          ? String(data.get("siteUrl") || "").trim()
+          : "",
+      budget: String(data.get("budget") || "").trim(),
+      deadline: String(data.get("deadline") || "").trim(),
+      message: String(data.get("message") || "").trim(),
+      privacy: true,
+      website: String(data.get("website") || ""),
+      elapsed_ms: Date.now() - startedAt,
+    };
+  }
+
+  function showAlert(message) {
+    if (!alertBox) return;
+    alertBox.textContent = message;
+    alertBox.hidden = false;
+  }
+
+  function setSubmitting(on) {
+    if (!submitBtn) return;
+    submitBtn.disabled = on;
+    submitBtn.textContent = on ? "送信中..." : "無料で相談する";
+    submitBtn.classList.toggle("is-disabled", on);
+  }
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    if (submitBtn && submitBtn.disabled) return;
+
+    if (elapsedInput) elapsedInput.value = String(Date.now() - startedAt);
+
+    const payload = validate();
+    if (!payload) return;
+
+    setSubmitting(true);
+
+    try {
+      const res = await fetch(form.getAttribute("action") || "/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      let body = {};
+      try {
+        body = await res.json();
+      } catch {
+        body = {};
+      }
+
+      if (res.ok && body.ok) {
+        if (successBox) {
+          successBox.hidden = false;
+          form.hidden = true;
+          successBox.setAttribute("tabindex", "-1");
+          successBox.focus({ preventScroll: true });
+          successBox.scrollIntoView({ behavior: "smooth", block: "center" });
+        }
+        return;
+      }
+
+      // サーバー側の項目別エラーを反映
+      if (res.status === 422 && body.fields) {
+        Object.entries(body.fields).forEach(([name, message]) =>
+          setError(name, String(message))
+        );
+        showAlert("入力内容をご確認ください。");
+        setSubmitting(false);
+        return;
+      }
+
+      showAlert(
+        body.message || "送信に失敗しました。時間をおいて再度お試しください。"
+      );
+      setSubmitting(false);
+    } catch {
+      showAlert("送信に失敗しました。通信状況をご確認のうえ、再度お試しください。");
+      setSubmitting(false);
+    }
+  });
+}
+
+/* -------------------------------------------------------------
  * 初期化
  * ----------------------------------------------------------- */
 
@@ -574,6 +864,16 @@ function init() {
   setupMedia();
   setupMobileNav();
   setupStickyCta();
+  setupFloatingContact();
+  setupInquiryForm();
+
+  // ヘッダー等を差し込んだ後にレイアウトが変わるため、
+  // #inquiry-form 付きで来た場合は着地位置を取り直す。
+  if (window.location.hash === INQUIRY_HASH) {
+    window.requestAnimationFrame(() => {
+      window.requestAnimationFrame(() => scrollToInquiryForm(false));
+    });
+  }
 }
 
 document.addEventListener("DOMContentLoaded", init);

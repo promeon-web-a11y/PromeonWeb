@@ -44,7 +44,15 @@ function externalAttrs(href) {
 export function renderHeader(currentPath = "/") {
   const { siteName, nav, primaryCta, stickyCta, contact, logoImage } = siteConfig;
 
-  const links = nav
+  // ナビ項目の末尾に「お問い合わせ」を追加。
+  //   他のメニュー（サービス・料金…）と同じ通常リンクとして表示します（ボタン化しない）。
+  //   遷移先は主要CTAと同じ（primaryCta.href）。フッターには出しません（nav 配列は変更しない）。
+  const navItems = [
+    ...nav,
+    { label: primaryCta.headerLabel || "お問い合わせ", href: primaryCta.href },
+  ];
+
+  const links = navItems
     .map((item) => {
       const current = isCurrent(item.href, currentPath);
       return `<a href="${esc(item.href)}"${
@@ -60,13 +68,6 @@ export function renderHeader(currentPath = "/") {
       )}" alt="${esc(siteName)}" width="190" height="40" />
        <span class="site-logo-text" data-site-name hidden>${esc(siteName)}</span>`
     : `<span class="site-logo-text" data-site-name>${esc(siteName)}</span>`;
-
-  // ヘッダー右のボタン：無料相談へ一本化（見積りは相談内で案内するため headerLabel を使用）。
-  //   公式LINEへは直リンクしません（LINEは問い合わせページのおすすめ窓口）。
-  const headerCtaLabel = primaryCta.headerLabel || primaryCta.label;
-  const headerBtn = `<a href="${esc(primaryCta.href)}" class="btn btn-primary nav-cta">${esc(
-    headerCtaLabel
-  )}</a>`;
 
   const sticky = (stickyCta || [])
     .map((c) => {
@@ -105,7 +106,6 @@ export function renderHeader(currentPath = "/") {
 
       <nav id="site-nav" class="site-nav" aria-label="サイト内メニュー">
         ${links}
-        ${headerBtn}
       </nav>
     </div>
   </header>
@@ -199,6 +199,39 @@ export function renderFooter() {
       <p class="footer-copy">&copy; 2026 Promeon Web. All Rights Reserved.</p>
     </div>
   </footer>`;
+}
+
+/**
+ * 全ページ右下の常時表示フローティング問い合わせボタン（＋初回のみの吹き出し）。
+ *  - リンク先は無料相談ページの問い合わせフォーム（#inquiry-form）。
+ *  - PC / スマホでラベルを出し分け（表示切替は CSS）。
+ *  - 吹き出しの表示制御は main.js（初回のみ・スマホ非表示）。
+ */
+export function renderFloatingContact() {
+  const fc = siteConfig.floatingContact;
+  if (!fc || !fc.href) return "";
+
+  const bubble = fc.bubble
+    ? `<p class="floating-contact__bubble" data-floating-bubble hidden>${esc(fc.bubble)}</p>`
+    : "";
+
+  return `
+  <div class="floating-contact" data-floating-contact>
+    ${bubble}
+    <a
+      class="floating-contact__btn"
+      href="${esc(fc.href)}"
+      aria-label="${esc(fc.ariaLabel || fc.labelPc || "お問い合わせ")}"
+    >
+      ${fc.icon ? `<span class="floating-contact__icon" aria-hidden="true">${esc(fc.icon)}</span>` : ""}
+      <span class="floating-contact__label floating-contact__label--pc">${esc(
+        fc.labelPc || "無料相談・お問い合わせ"
+      )}</span>
+      <span class="floating-contact__label floating-contact__label--sp">${esc(
+        fc.labelSp || "無料相談"
+      )}</span>
+    </a>
+  </div>`;
 }
 
 /** セクション見出し（EYEBROW＋見出し＋任意のリード文） */

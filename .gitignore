@@ -2,3 +2,11 @@ node_modules
 dist
 .DS_Store
 *.log
+
+# 環境変数（秘密情報。GitHubへ push しない）
+.env
+.env.local
+.env.*.local
+
+# Vercel CLI
+.vercel

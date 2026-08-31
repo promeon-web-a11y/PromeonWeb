@@ -3352,3 +3352,400 @@ section[id],
     font-size: 1rem;
   }
 }
+
+/* ==============================================================
+   無料相談・お問い合わせフォーム（/contact/ 最下部）
+   ＋ 右下フローティング問い合わせボタン（全ページ）
+   - 白ベース／オレンジをアクセント／ネイビーを補助色
+   - 既存ルールは変更せず、末尾に追記
+   ============================================================== */
+
+/* ---------- フォーム全体 ---------- */
+.inquiry-section {
+  background: var(--color-bg);
+}
+
+.inquiry-card {
+  max-width: 640px;
+  margin: 0 auto;
+  background: #fff;
+  border: 1px solid var(--color-border);
+  border-top: 4px solid var(--color-primary);
+  border-radius: var(--radius-m);
+  padding: 28px 24px;
+}
+
+.inquiry-form {
+  display: grid;
+  gap: 20px;
+}
+
+.inquiry-field {
+  display: grid;
+  gap: 6px;
+  border: 0;
+  margin: 0;
+  padding: 0;
+  min-width: 0;
+}
+
+.inquiry-field > label,
+.inquiry-field > legend {
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--color-text);
+  padding: 0;
+}
+
+.inquiry-req,
+.inquiry-opt {
+  display: inline-block;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  padding: 2px 8px;
+  border-radius: 9999px;
+  margin-left: 6px;
+  vertical-align: middle;
+}
+.inquiry-req {
+  background: var(--color-primary);
+  color: #fff;
+}
+.inquiry-opt {
+  background: #eef1f4;
+  color: var(--color-text-light);
+}
+
+.inquiry-form input[type="text"],
+.inquiry-form input[type="email"],
+.inquiry-form input[type="url"],
+.inquiry-form select,
+.inquiry-form textarea {
+  width: 100%;
+  min-height: 48px;
+  padding: 12px 14px;
+  font: inherit;
+  color: var(--color-text);
+  background: #fff;
+  border: 1px solid #c9d0d8;
+  border-radius: var(--radius-s);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.inquiry-form textarea {
+  min-height: 140px;
+  line-height: 1.7;
+  resize: vertical;
+}
+
+.inquiry-form select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='9' viewBox='0 0 14 9'%3E%3Cpath d='M1 1.5l6 6 6-6' stroke='%23556577' stroke-width='1.8' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  padding-right: 40px;
+}
+
+.inquiry-form input:focus,
+.inquiry-form select:focus,
+.inquiry-form textarea:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(232, 103, 42, 0.18);
+}
+
+.inquiry-form input[aria-invalid="true"],
+.inquiry-form select[aria-invalid="true"],
+.inquiry-form textarea[aria-invalid="true"] {
+  border-color: #c0392b;
+  background: #fdf3f2;
+}
+
+/* ---------- ラジオ（現在Webサイトを持っているか） ---------- */
+.inquiry-radios {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 2px;
+}
+.inquiry-radio {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 8px 16px;
+  border: 1px solid #c9d0d8;
+  border-radius: var(--radius-s);
+  font-weight: 600;
+  cursor: pointer;
+}
+.inquiry-radio input {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--color-primary);
+  margin: 0;
+}
+.inquiry-radio:focus-within {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(232, 103, 42, 0.18);
+}
+
+/* ---------- プライバシーポリシー同意 ---------- */
+.inquiry-field--consent {
+  gap: 6px;
+}
+.inquiry-consent {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  line-height: 1.7;
+  cursor: pointer;
+}
+.inquiry-consent input {
+  width: 20px;
+  height: 20px;
+  margin-top: 3px;
+  flex-shrink: 0;
+  accent-color: var(--color-primary);
+}
+.inquiry-consent a {
+  color: var(--color-primary-dark);
+  text-decoration: underline;
+  font-weight: 700;
+}
+.inquiry-consent:focus-within a {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* ---------- エラーメッセージ（色だけに頼らない：⚠ 記号＋太字＋アイコン枠） ---------- */
+.form-error {
+  margin: 2px 0 0;
+  padding-left: 2px;
+  color: #b02a1a;
+  font-size: 0.85rem;
+  font-weight: 700;
+  line-height: 1.6;
+}
+
+.inquiry-form__alert {
+  margin: 0;
+  padding: 12px 14px;
+  background: #fdf2f0;
+  border: 1px solid #e2b3aa;
+  border-left: 4px solid #c0392b;
+  border-radius: var(--radius-s);
+  color: #8f2417;
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+
+/* ---------- 送信ボタン ---------- */
+.inquiry-submit {
+  display: grid;
+  gap: 10px;
+  justify-items: center;
+  margin-top: 4px;
+}
+.inquiry-submit .btn {
+  width: 100%;
+  max-width: 320px;
+}
+.inquiry-submit__note {
+  margin: 0;
+  font-size: 0.8rem;
+  color: var(--color-text-light);
+  text-align: center;
+}
+
+/* ---------- 送信完了メッセージ ---------- */
+.inquiry-result {
+  border-radius: var(--radius-m);
+  padding: 22px 20px;
+  text-align: center;
+}
+.inquiry-result--success {
+  background: #eef7f0;
+  border: 1px solid #bfe0c8;
+}
+.inquiry-result__title {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin: 0 0 8px;
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: #1e7a3d;
+}
+.inquiry-result__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 9999px;
+  background: #1e7a3d;
+  color: #fff;
+  font-size: 0.9rem;
+}
+.inquiry-result p:last-child {
+  margin: 0;
+  color: var(--color-text);
+  font-size: 0.92rem;
+}
+.inquiry-result:focus {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 4px;
+}
+
+/* ---------- ハニーポット（人には見せない） ---------- */
+.inquiry-hp {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@media (min-width: 600px) {
+  .inquiry-card {
+    padding: 36px 40px;
+  }
+}
+
+/* ==============================================================
+   右下フローティング問い合わせボタン
+   ============================================================== */
+.floating-contact {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  z-index: 80;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 10px;
+  pointer-events: none;
+}
+
+.floating-contact__btn {
+  pointer-events: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 18px;
+  background: var(--color-primary);
+  color: #fff;
+  font-weight: 800;
+  font-size: 0.92rem;
+  line-height: 1.2;
+  border-radius: 9999px;
+  border: 2px solid #fff;
+  box-shadow: 0 6px 18px rgba(28, 58, 94, 0.22);
+  transition: transform 0.18s ease, background-color 0.18s ease,
+    box-shadow 0.18s ease;
+}
+.floating-contact__btn:hover {
+  background: var(--color-primary-dark);
+  transform: translateY(-3px);
+  box-shadow: 0 12px 26px rgba(28, 58, 94, 0.28);
+}
+.floating-contact__btn:active {
+  transform: translateY(-1px);
+}
+.floating-contact__btn:focus-visible {
+  outline: 3px solid var(--color-dark);
+  outline-offset: 2px;
+}
+
+.floating-contact__icon {
+  font-size: 1rem;
+}
+
+.floating-contact__label--sp {
+  display: none;
+}
+
+/* ---------- 初回のみの吹き出し ---------- */
+.floating-contact__bubble {
+  position: relative;
+  pointer-events: none;
+  max-width: 220px;
+  margin: 0;
+  padding: 10px 14px;
+  background: #fff;
+  color: var(--color-dark);
+  font-size: 0.82rem;
+  font-weight: 700;
+  line-height: 1.5;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-m);
+  box-shadow: 0 8px 22px rgba(28, 58, 94, 0.18);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(6px);
+  transition: opacity 0.4s ease, transform 0.4s ease, visibility 0.4s;
+}
+.floating-contact__bubble::after {
+  content: "";
+  position: absolute;
+  right: 26px;
+  bottom: -6px;
+  width: 12px;
+  height: 12px;
+  background: #fff;
+  border-right: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--color-border);
+  transform: rotate(45deg);
+}
+.floating-contact.has-bubble .floating-contact__bubble {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+/* ヘッダーメニュー展開中・スマホ固定CTAと重ならないように */
+body.nav-open .floating-contact {
+  display: none;
+}
+
+@media (max-width: 899px) {
+  .floating-contact {
+    right: 12px;
+    /* スマホ下部の固定CTAバー（約64px＋セーフエリア）より十分上に置く */
+    bottom: calc(84px + env(safe-area-inset-bottom, 0px));
+  }
+  .floating-contact__btn {
+    padding: 10px 16px;
+    font-size: 0.88rem;
+  }
+  .floating-contact__label--pc {
+    display: none;
+  }
+  .floating-contact__label--sp {
+    display: inline;
+  }
+  /* スマホでは吹き出しを出さない（邪魔になりやすいため） */
+  .floating-contact__bubble {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .floating-contact__btn,
+  .floating-contact__bubble {
+    transition: none;
+  }
+  .floating-contact__btn:hover {
+    transform: none;
+  }
+}

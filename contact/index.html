@@ -135,6 +135,249 @@
           </div>
         </div>
       </section>
+
+      <!-- 無料相談・お問い合わせフォーム（ページ最下部・フッター直前） -->
+      <section class="section inquiry-section" id="inquiry-form" aria-labelledby="inquiry-form-title">
+        <div class="container">
+          <div class="section-head">
+            <span class="section-eyebrow">FORM</span>
+            <h2 id="inquiry-form-title">無料相談・お問い合わせ</h2>
+            <p>
+              Webサイト制作についてのご相談・お見積もりはこちらからお気軽にお問い合わせください。<br />
+              まだ依頼するか決まっていない段階でも問題ありません。<br />
+              原則24時間以内にご返信いたします。
+            </p>
+          </div>
+
+          <div class="inquiry-card">
+            <!-- 送信完了メッセージ（送信成功時に表示） -->
+            <div
+              class="inquiry-result inquiry-result--success"
+              data-inquiry-success
+              role="status"
+              hidden
+            >
+              <p class="inquiry-result__title">
+                <span class="inquiry-result__icon" aria-hidden="true">✓</span>
+                お問い合わせありがとうございます。
+              </p>
+              <p>内容を確認のうえ、原則24時間以内にご返信いたします。</p>
+            </div>
+
+            <form class="inquiry-form" id="inquiry-form-el" method="post" action="/api/contact" novalidate>
+              <!-- 画面全体に関わる送信エラー -->
+              <p
+                class="inquiry-form__alert"
+                data-inquiry-alert
+                role="alert"
+                aria-live="assertive"
+                hidden
+              ></p>
+
+              <!-- スパム対策：人には見えないハニーポット項目（入力しないでください） -->
+              <div class="inquiry-hp" aria-hidden="true">
+                <label for="if-website">ここは入力しないでください</label>
+                <input
+                  type="text"
+                  id="if-website"
+                  name="website"
+                  tabindex="-1"
+                  autocomplete="off"
+                />
+              </div>
+              <input type="hidden" name="elapsed_ms" data-inquiry-elapsed value="" />
+
+              <!-- お名前（必須） -->
+              <div class="inquiry-field">
+                <label for="if-name">
+                  お名前 <span class="inquiry-req">必須</span>
+                </label>
+                <input
+                  type="text"
+                  id="if-name"
+                  name="name"
+                  autocomplete="name"
+                  required
+                  maxlength="100"
+                  aria-describedby="if-name-error"
+                />
+                <p class="form-error" id="if-name-error" data-error-for="name" hidden></p>
+              </div>
+
+              <!-- 会社名・屋号（任意） -->
+              <div class="inquiry-field">
+                <label for="if-company">
+                  会社名・屋号 <span class="inquiry-opt">任意</span>
+                </label>
+                <input
+                  type="text"
+                  id="if-company"
+                  name="company"
+                  autocomplete="organization"
+                  maxlength="120"
+                  aria-describedby="if-company-error"
+                />
+                <p class="form-error" id="if-company-error" data-error-for="company" hidden></p>
+              </div>
+
+              <!-- メールアドレス（必須） -->
+              <div class="inquiry-field">
+                <label for="if-email">
+                  メールアドレス <span class="inquiry-req">必須</span>
+                </label>
+                <input
+                  type="email"
+                  id="if-email"
+                  name="email"
+                  autocomplete="email"
+                  required
+                  maxlength="200"
+                  aria-describedby="if-email-error"
+                />
+                <p class="form-error" id="if-email-error" data-error-for="email" hidden></p>
+              </div>
+
+              <!-- ご相談内容（必須・選択式） -->
+              <div class="inquiry-field">
+                <label for="if-category">
+                  ご相談内容 <span class="inquiry-req">必須</span>
+                </label>
+                <select
+                  id="if-category"
+                  name="category"
+                  required
+                  aria-describedby="if-category-error"
+                >
+                  <option value="">選択してください</option>
+                  <option value="新しくWebサイトを作りたい">新しくWebサイトを作りたい</option>
+                  <option value="現在のWebサイトをリニューアルしたい">
+                    現在のWebサイトをリニューアルしたい
+                  </option>
+                  <option value="Webサイトの一部を修正したい">Webサイトの一部を修正したい</option>
+                  <option value="料金・見積もりについて相談したい">
+                    料金・見積もりについて相談したい
+                  </option>
+                  <option value="Miniプランについて">Miniプランについて</option>
+                  <option value="Standardプランについて">Standardプランについて</option>
+                  <option value="Proプランについて">Proプランについて</option>
+                  <option value="オーダーメイド制作について">オーダーメイド制作について</option>
+                  <option value="その他">その他</option>
+                </select>
+                <p class="form-error" id="if-category-error" data-error-for="category" hidden></p>
+              </div>
+
+              <!-- 現在Webサイトを持っていますか？（選択式） -->
+              <fieldset class="inquiry-field inquiry-field--radio">
+                <legend>現在Webサイトを持っていますか？</legend>
+                <div class="inquiry-radios">
+                  <label class="inquiry-radio">
+                    <input type="radio" name="hasSite" value="はい" data-has-site />
+                    <span>はい</span>
+                  </label>
+                  <label class="inquiry-radio">
+                    <input type="radio" name="hasSite" value="いいえ" data-has-site />
+                    <span>いいえ</span>
+                  </label>
+                </div>
+                <p class="form-error" id="if-hassite-error" data-error-for="hasSite" hidden></p>
+              </fieldset>
+
+              <!-- 現在のWebサイトURL（「はい」を選んだときのみ表示） -->
+              <div class="inquiry-field" data-site-url-field hidden>
+                <label for="if-siteurl">
+                  現在のWebサイトURL <span class="inquiry-opt">任意</span>
+                </label>
+                <input
+                  type="url"
+                  id="if-siteurl"
+                  name="siteUrl"
+                  inputmode="url"
+                  placeholder="https://example.com"
+                  maxlength="300"
+                  aria-describedby="if-siteurl-error"
+                />
+                <p class="form-error" id="if-siteurl-error" data-error-for="siteUrl" hidden></p>
+              </div>
+
+              <!-- ご予算（任意・選択式） -->
+              <div class="inquiry-field">
+                <label for="if-budget">
+                  ご予算 <span class="inquiry-opt">任意</span>
+                </label>
+                <select id="if-budget" name="budget">
+                  <option value="">選択してください</option>
+                  <option value="5万円前後">5万円前後</option>
+                  <option value="5万円〜10万円">5万円〜10万円</option>
+                  <option value="10万円〜20万円">10万円〜20万円</option>
+                  <option value="20万円以上">20万円以上</option>
+                  <option value="まだ決めていない">まだ決めていない</option>
+                  <option value="相談して決めたい">相談して決めたい</option>
+                </select>
+              </div>
+
+              <!-- 希望納期（任意・選択式） -->
+              <div class="inquiry-field">
+                <label for="if-deadline">
+                  希望納期 <span class="inquiry-opt">任意</span>
+                </label>
+                <select id="if-deadline" name="deadline">
+                  <option value="">選択してください</option>
+                  <option value="できるだけ早く">できるだけ早く</option>
+                  <option value="1週間以内">1週間以内</option>
+                  <option value="2週間以内">2週間以内</option>
+                  <option value="1ヶ月以内">1ヶ月以内</option>
+                  <option value="特に決まっていない">特に決まっていない</option>
+                  <option value="相談して決めたい">相談して決めたい</option>
+                </select>
+              </div>
+
+              <!-- ご相談・お問い合わせ内容（必須・複数行） -->
+              <div class="inquiry-field">
+                <label for="if-message">
+                  ご相談・お問い合わせ内容 <span class="inquiry-req">必須</span>
+                </label>
+                <textarea
+                  id="if-message"
+                  name="message"
+                  rows="6"
+                  required
+                  maxlength="5000"
+                  placeholder="制作したいWebサイトの内容や、現在のお悩みなどをご自由にご記入ください。"
+                  aria-describedby="if-message-error"
+                ></textarea>
+                <p class="form-error" id="if-message-error" data-error-for="message" hidden></p>
+              </div>
+
+              <!-- プライバシーポリシー同意（必須） -->
+              <div class="inquiry-field inquiry-field--consent">
+                <label class="inquiry-consent">
+                  <input
+                    type="checkbox"
+                    id="if-privacy"
+                    name="privacy"
+                    required
+                    aria-describedby="if-privacy-error"
+                  />
+                  <span>
+                    <a href="/privacy.html">プライバシーポリシー</a>に同意する
+                    <span class="inquiry-req">必須</span>
+                  </span>
+                </label>
+                <p class="form-error" id="if-privacy-error" data-error-for="privacy" hidden></p>
+              </div>
+
+              <div class="inquiry-submit">
+                <button type="submit" class="btn btn-primary btn-lg" data-inquiry-submit>
+                  無料で相談する
+                </button>
+                <p class="inquiry-submit__note">
+                  送信いただいた内容はお問い合わせ対応のみに使用します。
+                </p>
+              </div>
+            </form>
+          </div>
+        </div>
+      </section>
     </main>
 
     <div id="site-footer"></div>

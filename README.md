@@ -31,7 +31,7 @@ lint / test スクリプトはプロジェクトに用意されていません�
 | 制作サンプル | `/samples/` | `samples/index.html` | プラン別の架空サンプル（構成・機能・向いている事業者・別タブで表示） |
 | 制作の流れ | `/flow/` | `flow/index.html` | 5ステップ（お客様の作業／Promeonの作業／確認タイミング）＋必要素材＋最短3時間の条件 |
 | よくある質問 | `/faq/` | `faq/index.html` | 12項目（回答を最初から表示。開閉なし） |
-| お問い合わせ | `/contact/` | `contact/index.html` | 公式LINE（おすすめ・ボタン＋PC用QR＋相談イメージ）／メール（定型文 `mailto:`）／SNS案内（Facebook・Instagram/X近日公開）／記入項目 |
+| お問い合わせ | `/contact/` | `contact/index.html` | 公式LINE（おすすめ・ボタン＋PC用QR＋相談イメージ）／メール（定型文 `mailto:`）／SNS案内（Facebook・Instagram/X近日公開）／記入項目／**ページ最下部の問い合わせフォーム（`#inquiry-form`）** |
 | プライバシーポリシー | `/privacy.html` | `privacy.html` | `noindex` |
 
 - 各ページは実体HTMLのため、URL直接アクセス・リロードでも404になりません。
@@ -64,8 +64,8 @@ promeon-web/
 | 変更したい内容 | キー |
 | --- | --- |
 | ヘッダーのロゴ画像（未設定なら文字「Promeon Web」） | `logoImage` |
-| ナビ項目・順番（「お問い合わせ」はCTAへ統合済み） | `nav` |
-| ヘッダー右CTA／ページ内／フッターの「無料相談・無料見積り」（リンク先は `/contact/`。LINE直リンクにはしない） | `primaryCta`（`label` / `labelShort` / `href`） |
+| ナビ項目・順番（「お問い合わせ」は `nav` に置かず、ヘッダー末尾へ自動追加） | `nav` |
+| ヘッダー末尾の「お問い合わせ」リンク／ページ内・フッターの「無料相談・無料見積り」（リンク先は `/contact/`。LINE直リンクにはしない） | `primaryCta`（`headerLabel` / `label` / `labelShort` / `href`） |
 | CTA下の補足文（相談・見積り無料） | `ctaSupportNote` |
 | スマホ画面下部の固定CTA（`/contact/` と `/plans/` へ。LINEは載せない） | `stickyCta` |
 | お問い合わせの公式LINE案内文・メール案内文 | `contactGuide`（`lineHeading` / `lineBody` / `mailHeading` / `mailBody2`） |
@@ -157,7 +157,9 @@ promeon-web/
   - 公式LINE専用ボタンとLINEアイコンのみ LINEグリーン（`--color-line`）を使用（サイト全体には広げない）。
 - ヘッダーは固定（`position: sticky; top: 0`）・白背景・薄い下境界線。高さ PC72px／SP64px、
   ページ内リンクは `scroll-padding-top` でヘッダーに隠れないようにしています。
-  右端のボタンは「無料相談・無料見積り」（オレンジ背景・白文字・角丸14px、`/contact/` へ内部リンク）。
+  ナビ末尾の「お問い合わせ」（`primaryCta.headerLabel` / `primaryCta.href`）は、他のメニュー項目と
+  同じ通常リンクとして表示します（ボタン化・オレンジ塗り・角丸なし）。`renderHeader()` が `nav` 配列の
+  末尾に自動追加するもので、`nav` 配列やフッターには含めません。遷移先は `/contact/`。
   公式LINEはヘッダーの主要CTAにはせず、問い合わせページの「おすすめ窓口」としてのみ案内します。
 - 角丸・影は控えめ（`--radius-*` と `--shadow-card` を縮小、主要カードは影なし）。
 - ロゴ表記（文字）の色は既存のオレンジ系のまま。配色トークンは `src/style.css` 末尾の追記ブロックで上書き（既存行は無変更）。
@@ -170,8 +172,56 @@ promeon-web/
 - 納期は断定しません（「通常3〜7日」等の固定表記は撤去）。「まずはご相談ください」を基本とし、
   「最短3時間」もスケジュール・制作内容により対応可否が異なる要相談の目安として案内しています。
 - 支払い方法は「銀行振込」「クレジットカード」のみ。
-- お問い合わせは送信処理を持つフォームを設置せず、公式LINE と定型文入り `mailto:` リンクで対応
-  （メールアドレスや秘密情報をフロントの送信処理に埋め込みません）。
+- お問い合わせは、公式LINE・定型文入り `mailto:` リンクに加えて、`/contact/` 最下部に
+  問い合わせフォーム（`#inquiry-form`）を設置しています。送信は Vercel サーバーレス関数
+  `api/contact.js` が受け取り、メール送信サービス Resend 経由で管理者宛メールに変換します。
+  API キー等の秘密情報はすべて環境変数で管理し、フロントには一切含めません（下記「お問い合わせフォーム」参照）。
 - 公式LINEのQRコードは `npx qrcode`（オフライン生成）で作成。外部のQR生成サービスには依存していません。
 - `canonical` / `og:url` は正式ドメイン未確定のため、アクセス先URLから JavaScript で生成（架空ドメインは設定しません）。
 - 各ページ個別の `title` / `meta description` / OGP を HTML に静的記述。JS無効時のフォールバックを `<noscript>` に用意。
+
+## お問い合わせフォーム（/contact/ 最下部）
+
+`/contact/` ページ最下部のフォーム（アンカー `#inquiry-form`）と、全ページ右下の
+フローティングボタンから送信されます。
+
+### 構成
+
+| 役割 | 場所 |
+| --- | --- |
+| フォームの見た目（項目・ラベル・選択肢） | `contact/index.html` の `#inquiry-form` セクション |
+| 入力チェック・送信・完了/失敗表示・二重送信防止 | `src/main.js` の `setupInquiryForm()` |
+| 右下フローティングボタン（全ページ）＋初回吹き出し | `src/components.js` の `renderFloatingContact()` ／ `src/main.js` の `setupFloatingContact()` ／ 文言は `src/config.js` の `floatingContact` |
+| 受信処理（サーバー側） | `api/contact.js`（Vercel サーバーレス関数） |
+| スタイル | `src/style.css` 末尾の「無料相談・お問い合わせフォーム」ブロック |
+
+### 送信の流れ
+
+1. ブラウザ側で必須・メール形式・URL形式・プライバシー同意をチェック
+2. 問題なければ `POST /api/contact`（JSON）
+3. `api/contact.js` がサーバー側でも再チェック＋スパム対策（ハニーポット／送信までの経過時間／簡易レート制限）
+4. メール送信サービス **Resend** の API 経由で、`CONTACT_TO_EMAIL` 宛にメール送信
+5. 成功時は完了メッセージ、失敗時はエラーメッセージを表示
+
+### 必要な環境変数（`.env.example` を参照）
+
+| 変数名 | 用途 | 必須 |
+| --- | --- | --- |
+| `RESEND_API_KEY` | Resend（https://resend.com）の API キー（`re_` で始まる） | 必須 |
+| `CONTACT_TO_EMAIL` | 問い合わせメールの届け先アドレス | 必須 |
+| `CONTACT_FROM_EMAIL` | 差出人。独自ドメインを Resend で認証するまでは `Promeon Web <onboarding@resend.dev>` のまま | 任意 |
+
+- **秘密情報はコードに書かず、必ず環境変数で管理**します。`.env` は `.gitignore` 済みで GitHub には push されません。
+- ローカル開発（`npm run dev`）では、プロジェクト直下に `.env` を作成すると
+  `vite.config.js` の開発用プラグイン（`dev-api-contact`）が `/api/contact` を処理します。
+- 本番（Vercel）では、Vercel の管理画面（Project → Settings → Environment Variables）に
+  上記3つを登録します。`api/` ディレクトリは Vercel が自動的にサーバーレス関数として認識します。
+
+### ローカルでの確認
+
+```bash
+cp .env.example .env      # 値を自分のものに書き換える
+npm run dev               # http://localhost:5173/contact/#inquiry-form
+```
+
+`.env` を用意しない場合、フォーム送信は「送信に失敗しました」表示になります（見た目・入力チェックの確認は可能）。
