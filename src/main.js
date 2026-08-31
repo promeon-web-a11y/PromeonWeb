@@ -794,8 +794,9 @@ function setupInquiryForm() {
 
     setSubmitting(true);
 
+    const endpoint = form.getAttribute("action") || "/api/contact";
     try {
-      const res = await fetch(form.getAttribute("action") || "/api/contact", {
+      const res = await fetch(endpoint, {
         method: "POST",
         headers: { "Content-Type": "application/json", Accept: "application/json" },
         body: JSON.stringify(payload),
@@ -808,7 +809,10 @@ function setupInquiryForm() {
         body = {};
       }
 
-      if (res.ok && body.ok) {
+      const succeeded =
+        res.ok && (body.success === true || body.ok === true);
+
+      if (succeeded) {
         if (successBox) {
           successBox.hidden = false;
           form.hidden = true;
@@ -829,12 +833,24 @@ function setupInquiryForm() {
         return;
       }
 
-      showAlert(
-        body.message || "送信に失敗しました。時間をおいて再度お試しください。"
+      // 本当の失敗理由を開発者コンソールに出す（秘密情報は含めない）。
+      // ネットワークタブの POST /api/contact のステータスと合わせて確認してください。
+      console.error(
+        "[inquiry] 送信失敗:",
+        JSON.stringify({
+          endpoint,
+          httpStatus: res.status,
+          error: body.error || null,
+          stage: body.stage || null,
+          detail: body.detail || null,
+        })
       );
+
+      showAlert("送信に失敗しました。時間をおいて再度お試しください。");
       setSubmitting(false);
-    } catch {
-      showAlert("送信に失敗しました。通信状況をご確認のうえ、再度お試しください。");
+    } catch (err) {
+      console.error("[inquiry] fetch 失敗（ネットワーク/CORS など）:", endpoint, err);
+      showAlert("送信に失敗しました。時間をおいて再度お試しください。");
       setSubmitting(false);
     }
   });

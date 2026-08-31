@@ -197,31 +197,57 @@ promeon-web/
 
 ### 送信の流れ
 
-1. ブラウザ側で必須・メール形式・URL形式・プライバシー同意をチェック
+1. ブラウザ側で必須・メール形式・URL形式・プライバシー同意をチェック → ボタンを `disabled`（二重送信防止）＋「送信中...」
 2. 問題なければ `POST /api/contact`（JSON）
-3. `api/contact.js` がサーバー側でも再チェック＋スパム対策（ハニーポット／送信までの経過時間／簡易レート制限）
-4. メール送信サービス **Resend** の API 経由で、`CONTACT_TO_EMAIL` 宛にメール送信
-5. 成功時は完了メッセージ、失敗時はエラーメッセージを表示
+3. `api/contact.js` がサーバー側でも再チェック＋スパム対策（ハニーポット `website` ／送信までの経過時間 `elapsed_ms` ／簡易レート制限 60秒3回）
+4. メール送信サービス **Resend** の API（`https://api.resend.com/emails`）で
+   `satokazu.promeon@gmail.com`（既定。`CONTACT_TO_EMAIL` で上書き可）宛にメール送信。
+   件名は `【Promeon Web】新しいお問い合わせ`、`reply_to` に問い合わせ者のメールアドレスを設定。
+5. **Resend が 2xx を返したときだけ** フロントに `{ ok: true }` を返し「お問い合わせを送信しました。」と表示。
+   失敗時（キー未設定 500／Resend エラー 502 など）は「送信に失敗しました。時間をおいて再度お試しください。」
+
+メール本文：お名前／会社名・屋号／メールアドレス／お問い合わせ種別／現在サイトの有無・URL／ご予算／希望納期／お問い合わせ内容／送信日時／送信元IP。
 
 ### 必要な環境変数（`.env.example` を参照）
 
 | 変数名 | 用途 | 必須 |
 | --- | --- | --- |
-| `RESEND_API_KEY` | Resend（https://resend.com）の API キー（`re_` で始まる） | 必須 |
-| `CONTACT_TO_EMAIL` | 問い合わせメールの届け先アドレス | 必須 |
-| `CONTACT_FROM_EMAIL` | 差出人。独自ドメインを Resend で認証するまでは `Promeon Web <onboarding@resend.dev>` のまま | 任意 |
+| `RESEND_API_KEY` | Resend（https://resend.com）の API キー（`re_` で始まる）。**これだけ登録すれば動きます。** | **必須** |
+| `CONTACT_TO_EMAIL` | 届け先。未設定なら `satokazu.promeon@gmail.com` | 任意 |
+| `CONTACT_FROM_EMAIL` | 差出人。未設定なら Resend テスト用 `Promeon Web <onboarding@resend.dev>` | 任意 |
 
-- **秘密情報はコードに書かず、必ず環境変数で管理**します。`.env` は `.gitignore` 済みで GitHub には push されません。
-- ローカル開発（`npm run dev`）では、プロジェクト直下に `.env` を作成すると
-  `vite.config.js` の開発用プラグイン（`dev-api-contact`）が `/api/contact` を処理します。
-- 本番（Vercel）では、Vercel の管理画面（Project → Settings → Environment Variables）に
-  上記3つを登録します。`api/` ディレクトリは Vercel が自動的にサーバーレス関数として認識します。
+- **秘密情報はコードに書かず、必ず環境変数で管理**します（`RESEND_API_KEY` のみが秘密。届け先アドレスは公開情報のためコード既定値あり）。
+  `.env` は `.gitignore` 済みで GitHub には push されません。
+- テスト用差出人（`onboarding@resend.dev`）を使う場合、Resend は「登録アカウントのアドレス」宛にしか送れません。
+  → **Resend には `satokazu.promeon@gmail.com` で登録**してください。独自ドメインを Resend で認証すれば任意宛先に送れます。
+- 本番（Vercel）：Project → Settings → Environment Variables に `RESEND_API_KEY` を追加（Production / Preview 両方）→ **Redeploy**。
+  `api/` ディレクトリは Vercel が自動でサーバーレス関数として認識します（`vercel.json` 不要）。
 
 ### ローカルでの確認
 
 ```bash
-cp .env.example .env      # 値を自分のものに書き換える
-npm run dev               # http://localhost:5173/contact/#inquiry-form
+cp .env.example .env       # RESEND_API_KEY に本物のキーを入れる
+npm run dev                # http://localhost:5173/contact/#inquiry-form
 ```
 
-`.env` を用意しない場合、フォーム送信は「送信に失敗しました」表示になります（見た目・入力チェックの確認は可能）。
+- 動作確認用：`GET /api/contact` が
+  `{"success":true,"configured":<true/false>,"to":"...","from":"..."}` を返します
+  （キーの設定有無・宛先・差出人を確認できる。秘密情報は返しません）。
+- `.env`（キー）が無い場合、送信は「送信に失敗しました」表示になります（見た目・入力チェックの確認は可能）。
+- ダミーキーを入れると、サーバーログに `[contact] sending via Resend ...` → `Resend error: status=401 ...`
+  が出て、実際に送信処理が走っていることを確認できます。
+
+### うまく届かないときの切り分け手順
+
+送信すると「送信に失敗しました」になる場合、原因は次のいずれかです。ブラウザの
+**開発者ツール → Console** に `[inquiry] 送信失敗: {...}` が出るので、その `httpStatus` と `error` で判別します。
+（あわせて Network タブで `POST /api/contact` のステータス、Vercel の **Deployment → Functions → `api/contact` のログ** も確認）
+
+| Console / Network の内容 | 原因 | 対処 |
+| --- | --- | --- |
+| `error:"not_configured"` / httpStatus 500、または `GET /api/contact` が `configured:false` | Vercel に `RESEND_API_KEY` が無い（または登録後に再デプロイしていない） | Vercel に `RESEND_API_KEY` を登録 → **Redeploy** |
+| `error:"send_failed"`, `detail.resendStatus:401` | API キーが誤り／失効 | Resend でキーを再発行して登録し直す |
+| `error:"send_failed"`, `detail.resendStatus:403` | テスト差出人のまま、Resend 登録アドレス以外へ送ろうとしている | Resend に `satokazu.promeon@gmail.com` で登録する（または独自ドメインを Resend で認証） |
+| `error:"send_failed"`, `detail.resendStatus:422` | From アドレスが不正（`@gmail.com` を直接指定など） | `CONTACT_FROM_EMAIL` を消して既定の `onboarding@resend.dev` に戻す |
+| httpStatus 404 / `fetch 失敗` | 関数が配信されていない | Vercel の Framework Preset＝Vite、Root Directory がリポジトリ直下か確認。`api/contact.js` がリポジトリ直下 `api/` にあること（`src/` の中はNG） |
+| httpStatus 429 | 短時間に送りすぎ（60秒で3回まで） | 少し待って再送 |
