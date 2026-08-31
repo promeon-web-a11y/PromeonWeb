@@ -164,7 +164,13 @@
               <p>内容を確認のうえ、原則24時間以内にご返信いたします。</p>
             </div>
 
-            <form class="inquiry-form" id="inquiry-form-el" method="post" action="/api/contact" novalidate>
+            <form
+              class="inquiry-form"
+              id="inquiry-form-el"
+              method="post"
+              action="https://formsubmit.co/ajax/satokazu.promeon@gmail.com"
+              novalidate
+            >
               <!-- 画面全体に関わる送信エラー -->
               <p
                 class="inquiry-form__alert"
@@ -185,7 +191,6 @@
                   autocomplete="off"
                 />
               </div>
-              <input type="hidden" name="elapsed_ms" data-inquiry-elapsed value="" />
 
               <!-- お名前（必須） -->
               <div class="inquiry-field">
@@ -218,6 +223,24 @@
                   aria-describedby="if-company-error"
                 />
                 <p class="form-error" id="if-company-error" data-error-for="company" hidden></p>
+              </div>
+
+              <!-- 電話番号（任意） -->
+              <div class="inquiry-field">
+                <label for="if-phone">
+                  電話番号 <span class="inquiry-opt">任意</span>
+                </label>
+                <input
+                  type="text"
+                  id="if-phone"
+                  name="phone"
+                  inputmode="tel"
+                  autocomplete="tel"
+                  maxlength="40"
+                  placeholder="例：090-1234-5678"
+                  aria-describedby="if-phone-error"
+                />
+                <p class="form-error" id="if-phone-error" data-error-for="phone" hidden></p>
               </div>
 
               <!-- メールアドレス（必須） -->

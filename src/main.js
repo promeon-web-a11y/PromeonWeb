@@ -644,8 +644,6 @@ function setupInquiryForm() {
   const successBox = document.querySelector("[data-inquiry-success]");
   const siteUrlField = form.querySelector("[data-site-url-field]");
   const siteUrlInput = form.querySelector("#if-siteurl");
-  const elapsedInput = form.querySelector("[data-inquiry-elapsed]");
-  const startedAt = Date.now();
 
   const fieldError = (name) =>
     form.querySelector(`.form-error[data-error-for="${name}"]`);
@@ -754,6 +752,7 @@ function setupInquiryForm() {
     return {
       name: String(data.get("name") || "").trim(),
       company: String(data.get("company") || "").trim(),
+      phone: String(data.get("phone") || "").trim(),
       email,
       category: String(data.get("category") || "").trim(),
       hasSite: String(data.get("hasSite") || "").trim(),
@@ -766,7 +765,6 @@ function setupInquiryForm() {
       message: String(data.get("message") || "").trim(),
       privacy: true,
       website: String(data.get("website") || ""),
-      elapsed_ms: Date.now() - startedAt,
     };
   }
 
@@ -783,23 +781,65 @@ function setupInquiryForm() {
     submitBtn.classList.toggle("is-disabled", on);
   }
 
+  function showSuccess() {
+    if (!successBox) return;
+    successBox.hidden = false;
+    form.hidden = true;
+    successBox.setAttribute("tabindex", "-1");
+    successBox.focus({ preventScroll: true });
+    successBox.scrollIntoView({ behavior: "smooth", block: "center" });
+  }
+
+  // 送信先（FormSubmit の AJAX エンドポイント）。HTML の <form action> で一元管理。
+  const FALLBACK_ENDPOINT =
+    "https://formsubmit.co/ajax/satokazu.promeon@gmail.com";
+
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
+    // 送信処理中はボタンが disabled。二重送信防止（永続ロックはしない）。
     if (submitBtn && submitBtn.disabled) return;
 
-    if (elapsedInput) elapsedInput.value = String(Date.now() - startedAt);
-
     const payload = validate();
-    if (!payload) return;
+    if (!payload) return; // バリデーションNG：送信せず、該当欄にエラー表示
+
+    // ハニーポットが埋まっている＝Bot。実送信せず成功表示（Bot に気付かせない）。
+    if (payload.website) {
+      showSuccess();
+      return;
+    }
 
     setSubmitting(true);
 
-    const endpoint = form.getAttribute("action") || "/api/contact";
+    const endpoint = form.getAttribute("action") || FALLBACK_ENDPOINT;
+    const sentAt = new Date().toLocaleString("ja-JP", { timeZone: "Asia/Tokyo" });
+
+    // FormSubmit へ送る本文。キー名がそのままメールの見出しになる。
+    const fsBody = {
+      お名前: payload.name,
+      "会社名・屋号": payload.company || "（未入力）",
+      電話番号: payload.phone || "（未入力）",
+      メールアドレス: payload.email,
+      お問い合わせ種別: payload.category,
+      "現在Webサイトの有無": payload.hasSite || "（未選択）",
+      "現在のWebサイトURL": payload.siteUrl || "（未入力）",
+      ご予算: payload.budget || "（未選択）",
+      希望納期: payload.deadline || "（未選択）",
+      お問い合わせ内容: payload.message,
+      送信日時: sentAt,
+      email: payload.email, // FormSubmit が Reply-To に使う
+      _subject: "【Promeon Web】新しいお問い合わせ",
+      _template: "table",
+      _captcha: "false",
+    };
+
     try {
       const res = await fetch(endpoint, {
         method: "POST",
-        headers: { "Content-Type": "application/json", Accept: "application/json" },
-        body: JSON.stringify(payload),
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify(fsBody),
       });
 
       let body = {};
@@ -809,47 +849,33 @@ function setupInquiryForm() {
         body = {};
       }
 
-      const succeeded =
-        res.ok && (body.success === true || body.ok === true);
+      // FormSubmit は success を文字列 "true" で返す。HTTP 200 かつ success:"true" のときだけ成功。
+      const ok =
+        res.ok && String(body && body.success).toLowerCase() === "true";
 
-      if (succeeded) {
-        if (successBox) {
-          successBox.hidden = false;
-          form.hidden = true;
-          successBox.setAttribute("tabindex", "-1");
-          successBox.focus({ preventScroll: true });
-          successBox.scrollIntoView({ behavior: "smooth", block: "center" });
-        }
+      if (ok) {
+        showSuccess();
         return;
       }
 
-      // サーバー側の項目別エラーを反映
-      if (res.status === 422 && body.fields) {
-        Object.entries(body.fields).forEach(([name, message]) =>
-          setError(name, String(message))
-        );
-        showAlert("入力内容をご確認ください。");
-        setSubmitting(false);
-        return;
-      }
-
-      // 本当の失敗理由を開発者コンソールに出す（秘密情報は含めない）。
-      // ネットワークタブの POST /api/contact のステータスと合わせて確認してください。
+      // 失敗：成功表示は出さない。原因を開発者コンソールへ（秘密情報なし）。
       console.error(
         "[inquiry] 送信失敗:",
         JSON.stringify({
           endpoint,
           httpStatus: res.status,
-          error: body.error || null,
-          stage: body.stage || null,
-          detail: body.detail || null,
+          formsubmitSuccess: (body && body.success) ?? null,
+          formsubmitMessage: (body && body.message) ?? null,
         })
       );
-
       showAlert("送信に失敗しました。時間をおいて再度お試しください。");
       setSubmitting(false);
     } catch (err) {
-      console.error("[inquiry] fetch 失敗（ネットワーク/CORS など）:", endpoint, err);
+      console.error(
+        "[inquiry] 送信失敗（ネットワーク/CORS など）:",
+        endpoint,
+        err
+      );
       showAlert("送信に失敗しました。時間をおいて再度お試しください。");
       setSubmitting(false);
     }

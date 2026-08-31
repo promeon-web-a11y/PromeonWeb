@@ -173,10 +173,10 @@ promeon-web/
   「最短3時間」もスケジュール・制作内容により対応可否が異なる要相談の目安として案内しています。
 - 支払い方法は「銀行振込」「クレジットカード」のみ。
 - お問い合わせは、公式LINE・定型文入り `mailto:` リンクに加えて、`/contact/` 最下部に
-  問い合わせフォーム（`#inquiry-form`）を設置しています。送信は Vercel サーバーレス関数
-  `api/contact.js` が受け取り、`RESEND_API_KEY` があれば Resend、無ければ FormSubmit
-  （APIキー不要）で管理者宛メールに変換します。秘密情報はすべて環境変数で管理し、
-  フロントには一切含めません（下記「お問い合わせフォーム」参照）。
+  問い合わせフォーム（`#inquiry-form`）を設置しています。`src/main.js` がブラウザから
+  直接 FormSubmit（`https://formsubmit.co/ajax/satokazu.promeon@gmail.com`）へ送信し、
+  FormSubmit が管理者宛メールに変換します。APIキー・秘密情報は不要（フロントにも含めません）。
+  詳細は下記「お問い合わせフォーム」参照。
 - 公式LINEのQRコードは `npx qrcode`（オフライン生成）で作成。外部のQR生成サービスには依存していません。
 - `canonical` / `og:url` は正式ドメイン未確定のため、アクセス先URLから JavaScript で生成（架空ドメインは設定しません）。
 - 各ページ個別の `title` / `meta description` / OGP を HTML に静的記述。JS無効時のフォールバックを `<noscript>` に用意。
@@ -192,56 +192,48 @@ promeon-web/
 | --- | --- |
 | フォームの見た目（項目・ラベル・選択肢） | `contact/index.html` の `#inquiry-form` セクション |
 | 入力チェック・送信・完了/失敗表示・二重送信防止 | `src/main.js` の `setupInquiryForm()` |
+| 送信先（メール変換サービス） | `contact/index.html` の `<form action="...">`（＝`src/main.js` が読む送信先） |
 | 右下フローティングボタン（全ページ）＋初回吹き出し | `src/components.js` の `renderFloatingContact()` ／ `src/main.js` の `setupFloatingContact()` ／ 文言は `src/config.js` の `floatingContact` |
-| 受信処理（サーバー側） | `api/contact.js`（Vercel サーバーレス関数） |
+| （予備・未使用）Resend 用サーバー関数 | `api/contact.js` |
 | スタイル | `src/style.css` 末尾の「無料相談・お問い合わせフォーム」ブロック |
 
-### 送信方式（2通り。自動で切り替わる）
+### 送信方式（現行）
 
-`api/contact.js` は環境変数 `RESEND_API_KEY` の有無で送信方式を切り替えます。
+**ブラウザから直接 FormSubmit へ送信します（APIキー・環境変数・サーバー関数は不要）。**
 
-| 条件 | 方式 | 必要な準備 |
+- 送信先：`https://formsubmit.co/ajax/satokazu.promeon@gmail.com`（`contact/index.html` の `<form action>`）
+- `src/main.js` の `setupInquiryForm()` が `fetch(action, {method:"POST", body: JSON})` で送信
+- FormSubmit がメールに変換 → **To：`satokazu.promeon@gmail.com` 固定**
+- `email` フィールドで **Reply-To＝問い合わせ者のメールアドレス**
+- 件名：`【Promeon Web】新しいお問い合わせ`（`_subject`）、本文は表形式（`_template: "table"`）
+- 本文の項目：お名前／会社名・屋号／電話番号／メールアドレス／お問い合わせ種別／現在Webサイトの有無／現在のWebサイトURL／ご予算／希望納期／お問い合わせ内容／送信日時
+- ★ FormSubmit は「その宛先への初回送信」で1回だけ確認メールを送ります。届いた「Activate Form」を1度クリックすれば以降ずっと転送されます（**設定済み**）。
+
+### 送信の流れ（`src/main.js`）
+
+1. `submit` を `preventDefault()` → 入力チェック（必須／メール形式／URL形式／プライバシー同意）。NG なら送信せず該当欄にエラー表示。
+2. ハニーポット（`website`）が埋まっていれば Bot とみなし、送信せず成功表示。
+3. 送信ボタンを `disabled` ＋「送信中...」（**二重送信防止。localStorage 等の永続ロックはしない**）。
+4. `fetch("https://formsubmit.co/ajax/satokazu.promeon@gmail.com", {method:"POST", headers:{Content-Type:application/json}, body:JSON})`。
+5. **HTTP 200 かつ レスポンス `success` が `"true"` のときだけ**「お問い合わせを送信しました。」を表示（フォームを隠す）。
+6. それ以外は「送信に失敗しました。時間をおいて再度お試しください。」＋ボタンを戻す＋`console.error("[inquiry] 送信失敗", {...})`。
+
+再送したいときは `/contact/` を再読み込みするだけ（送信済みロックは残しません）。
+
+### うまく届かないとき
+
+送信失敗時、ブラウザの **F12 → Console** に `[inquiry] 送信失敗: {...}`（`httpStatus` / `formsubmitSuccess` / `formsubmitMessage`）が出ます。
+
+| 症状 | 原因 | 対処 |
 | --- | --- | --- |
-| `RESEND_API_KEY` **なし**（既定） | **FormSubmit**（https://formsubmit.co、APIキー不要） | 初回だけ、届け先メールに届く「Activate Form」リンクを1度クリック |
-| `RESEND_API_KEY` **あり** | **Resend** | Vercel に `RESEND_API_KEY` を登録 → Redeploy |
+| `formsubmitMessage` に `activate` / `confirm` | FormSubmit の初回確認が未完了 | `satokazu.promeon@gmail.com` の FormSubmit メールの「Activate Form」を1度クリック |
+| `httpStatus 200` `success:"true"` なのに届かない | 同じ内容を連続送信 → FormSubmit の重複抑制、または無料枠の上限 | テストは本文を毎回変える。しばらく待つ。多用途なら独自ドメイン等を検討 |
+| `fetch 失敗` / CORS | ネットワーク、または `file://` で開いている | 実サイト（`https://promeon-web.vercel.app/contact/`）から送信 |
+| 迷惑メールに入る | 差出人が FormSubmit のため | Gmail で「迷惑メールではない」＋フィルタでスター付け等 |
 
-どちらの方式でも：To は `satokazu.promeon@gmail.com` 固定（`CONTACT_TO_EMAIL` で上書き可）、
-件名 `【Promeon Web】新しいお問い合わせ`、Reply-To は問い合わせ者のメールアドレス。
-本文：お名前／会社名・屋号／メールアドレス／お問い合わせ種別／現在サイトの有無・URL／ご予算／希望納期／お問い合わせ内容／送信日時／送信元IP。
+### 予備：Resend 方式に戻す場合（任意・現在未使用）
 
-### 送信の流れ
-
-1. ブラウザ側で必須・メール形式・URL形式・プライバシー同意をチェック → ボタンを `disabled`（二重送信防止）＋「送信中...」
-2. 問題なければ `POST /api/contact`（JSON）
-3. `api/contact.js` がサーバー側でも再チェック＋スパム対策（ハニーポット `website` ／送信までの経過時間 `elapsed_ms` ／簡易レート制限 60秒3回）
-4. 上表の方式でメール送信（サーバー側のみ。APIキーはブラウザに出さない）
-5. **HTTP 200 かつ `success:true` のときだけ** 「お問い合わせを送信しました。」を表示。
-   それ以外は「送信に失敗しました。時間をおいて再度お試しください。」
-
-### 環境変数（すべて任意。`.env.example` 参照）
-
-| 変数名 | 用途 |
-| --- | --- |
-| `RESEND_API_KEY` | 設定すると Resend 方式に切り替わる（`re_` で始まる） |
-| `CONTACT_TO_EMAIL` | 届け先の変更（未設定で `satokazu.promeon@gmail.com`） |
-| `CONTACT_FROM_EMAIL` | Resend 使用時の差出人（未設定で `onboarding@resend.dev`） |
-
-- 秘密情報はコードに書かず環境変数で管理。`.env` は `.gitignore` 済みで GitHub に出ません。
-- `api/` はリポジトリ直下に置くと Vercel が自動でサーバーレス関数化します（`vercel.json` 不要）。
-
-### 動作確認
-
-- `GET /api/contact` → `{"success":true,"method":"formsubmit" or "resend","to":"...","note":"..."}` を返す（秘密情報なし）。
-- 送信失敗時、ブラウザの **開発者ツール → Console** に `[inquiry] 送信失敗: {...}`（`httpStatus`/`error`/`detail`）が出ます。
-- サーバー側の詳細は Vercel の **Deployment → Functions → `api/contact` の Logs**（`[contact] ...`）。
-
-### うまく届かないときの切り分け
-
-| Console / Logs | 原因 | 対処 |
-| --- | --- | --- |
-| `error:"activation_required"` / Logs に `This form needs Activation` | FormSubmit の初回確認が未完了 | `satokazu.promeon@gmail.com` に届く FormSubmit のメールの「Activate Form」を1度クリック |
-| `error:"send_failed"`, `detail.via:"formsubmit"`, Logs に `open this page through a web server` | FormSubmit に送信元サイトが伝わっていない | 実サイト（`https://...`）から送信しているか確認（ローカルの `file://` は不可） |
-| `error:"send_failed"`, `detail.via:"resend"`, `detail.status:401` | Resend の API キーが誤り／失効 | キーを再発行して Vercel に登録し直す → Redeploy |
-| `error:"send_failed"`, `detail.via:"resend"`, `detail.status:403` | Resend テスト差出人のまま登録アドレス以外へ送信 | Resend に `satokazu.promeon@gmail.com` で登録、または独自ドメインを認証 |
-| `httpStatus 404` / `fetch 失敗` | 関数が配信されていない | Vercel の Framework Preset＝Vite、Root Directory がリポジトリ直下、`api/contact.js` が直下 `api/` にあるか確認 |
-| `httpStatus 429` | 短時間に送りすぎ（60秒3回） | 少し待って再送 |
+`api/contact.js`（Vercel 関数）は Resend 送信の実装を残してあります。使う場合：
+`contact/index.html` の `<form action>` と `src/main.js` の `FALLBACK_ENDPOINT` を `/api/contact` に戻し、
+Vercel に `RESEND_API_KEY`（`re_...`）を Production/Preview で登録 → Redeploy。
+`GET /api/contact` で設定状況を確認できます（秘密情報は返しません）。
