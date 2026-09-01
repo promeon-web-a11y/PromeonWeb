@@ -117,7 +117,8 @@ promeon-web/
 
 `samples` 配列で管理します。`status: "published"` かつ `demoUrl` あり →「サンプルを見る」ボタンが別タブで開きます。
 `status: "preparing"` または `demoUrl` 空 →「準備中」。デモ本体は `public/samples/<plan>/` に置くとビルドで `dist/samples/<plan>/` へコピーされます。
-現在：Mini `/samples/mini/index.html`（公開）、Standard `/samples/standard/index.html`（公開）、Pro は準備中。
+現在：Mini `/samples/mini/index.html`（公開）、Standard `/samples/standard/index.html`（公開）、Pro `/samples/seisou-pro/index.html`（公開・清掃会社／全11ページ）。
+※ Pro のデモ本体フォルダ名だけ `seisou-pro`（`02_samples/pro_cleaning/` 側の canonical / og:url / sitemap が最初から `/samples/seisou-pro/` を指しているため、それに合わせています）。
 すべて `isFictional: true` のため「サービス紹介用の架空サンプルです」と表示されます。
 
 ## 画像 — 差し替え場所
