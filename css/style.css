@@ -527,6 +527,8 @@ body.nav-open .menu-btn span{background:#fff;}
 .form-status{display:none;margin-top:18px;padding:14px 16px;border-radius:var(--radius);font-size:.9rem;}
 .form-status.is-show{display:block;}
 .form-status.is-ok{background:var(--primary-soft);border:1px solid var(--primary);color:var(--primary-dark);}
+.form-status.is-ng{background:#fbeaea;border:1px solid #d9a3a3;color:#8f2c2c;}
+.hp-field{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden;opacity:0;}
 .contact-aside{background:var(--bg-alt);border:1px solid var(--line);border-radius:var(--radius);padding:24px;}
 .contact-aside h3{font-size:1.02rem;margin:0 0 10px;}
 .contact-aside a{font-weight:700;}

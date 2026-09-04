@@ -17,7 +17,9 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Noto+Serif+JP:wght@500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/style.css">
-<!-- Promeon Web サイトサンプル／お問い合わせページ。フォームは表示確認用サンプルで送信処理はダミー（JSでダミー完了表示）。
+<!-- Promeon Web お問い合わせページ。フォームはブラウザから直接 FormSubmit（AJAX）へ送信する。
+     送信先: https://formsubmit.co/ajax/satokazu.promeon@gmail.com（APIキー・サーバー関数不要）。
+     送信処理は js/script.js の #contactForm ハンドラ。honeypot は _honey。
      電話番号・受付時間は要確認のため掲載せず、メール・フォーム・公式LINEのみ案内。動きは控えめ（main.quiet）。 -->
 </head>
 <body>
@@ -93,7 +95,8 @@
       <div class="split" style="align-items:flex-start;">
         <div class="split-body">
           <div class="form-wrap">
-            <form id="contactForm" novalidate>
+            <form id="contactForm" action="https://formsubmit.co/ajax/satokazu.promeon@gmail.com" method="POST" novalidate>
+              <input type="text" name="_honey" class="hp-field" tabindex="-1" autocomplete="off" aria-hidden="true">
               <div class="field">
                 <label for="cf-name">お名前<span class="req">必須</span></label>
                 <input type="text" id="cf-name" name="name" autocomplete="name" required>
@@ -120,8 +123,8 @@
                 <label for="cf-body">お問い合わせ内容<span class="req">必須</span></label>
                 <textarea id="cf-body" name="body" required placeholder="作りたいサイトのイメージ、掲載したい内容、ご予算感、参考サイトのURLなど、わかる範囲でご記入ください。"></textarea>
               </div>
-              <p class="inline-note">このフォームは表示確認用のサンプルです。送信ボタンを押しても実際には送信されません。</p>
-              <button type="submit" class="btn btn-primary btn-lg btn-block mt-16">送信する（サンプル）</button>
+              <p class="inline-note">ご入力いただいた内容は担当者にメールで届きます。通常2〜3営業日以内にご返信します。</p>
+              <button type="submit" class="btn btn-primary btn-lg btn-block mt-16">送信する</button>
               <p class="form-status" id="formStatus" role="status" aria-live="polite"></p>
             </form>
           </div>
