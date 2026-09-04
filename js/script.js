@@ -4,7 +4,7 @@
    - スクロール連動フェードイン（順次出現型 / [data-stagger] / prefers-reduced-motion 配慮）
    - 制作サンプルの「見え隠れ型」表示（双方向トグル）
    - よくある質問のアコーディオン開閉（高さトランジション）
-   - お問い合わせフォームの送信（FormSubmit 通常送信・非AJAX／_next 書き換え＋完了表示）
+   - お問い合わせフォームの送信（FormSubmit 通常送信・非AJAX／_next 書き換え＋完了表示＋二重送信防止）
    - ヘッダーの影付与（スクロール時） / フッター年号の自動表示 */
 (function () {
   'use strict';
@@ -139,17 +139,20 @@
   });
 
   /* ---------- お問い合わせフォーム（FormSubmit 通常送信 / 非AJAX） ----------
-     form[action] = https://formsubmit.co/<ランダムエイリアス> へ通常の POST 送信。
+     form[action] = https://formsubmit.co/satokazu.promeon@gmail.com へ通常の POST 送信。
      送信後 FormSubmit は _next の URL へリダイレクトで戻す。ここでは
+       ・ハニーポット（_honey）が埋まっていれば送信を中止
        ・_next を「実際に配信されているオリジン + ?sent=1」に書き換え
          （本番ドメインが変わっても戻り先が一致するように）
-       ・ハニーポット（_honey）が埋まっていれば送信を中止
-       ・二重送信防止として送信ボタンを無効化
-     だけを行い、あとはブラウザの通常送信に任せる（preventDefault しない）。
-     戻ってきたページ（?sent=1）で完了メッセージを表示する。 */
+       ・二重送信防止として送信ボタンを無効化（連打・多重送信を防ぐ）
+     だけを行い、あとはブラウザの通常送信に任せる（preventDefault しない／fetch も使わない）。
+     戻ってきたページ（?sent=1）で完了メッセージを表示する。
+     ブラウザの戻る操作でページが復元されたときは、ボタンを押せる状態に戻す。 */
   var form = document.getElementById('contactForm');
   if (form) {
     var status = document.getElementById('formStatus');
+    var submitBtn = form.querySelector('button[type="submit"]');
+    var submitting = false;
 
     function showFormStatus(ok, msg) {
       if (!status) return;
@@ -160,10 +163,19 @@
       status.focus();
     }
 
+    function unlockSubmit() {
+      submitting = false;
+      if (submitBtn) { submitBtn.disabled = false; submitBtn.removeAttribute('aria-busy'); }
+    }
+
     form.addEventListener('submit', function (e) {
       // ハニーポット：bot が埋めていたら送信しない
       var honey = form.querySelector('[name="_honey"]');
       if (honey && honey.value) { e.preventDefault(); return; }
+
+      // すでに送信処理中なら連打を無視
+      if (submitting) { e.preventDefault(); return; }
+      submitting = true;
 
       // 戻り先（_next）を実際のオリジンに合わせる
       var next = form.querySelector('[name="_next"]');
@@ -172,13 +184,17 @@
       }
 
       // 二重送信防止（通常送信はそのまま実行する）
-      var submitBtn = form.querySelector('button[type="submit"]');
       if (submitBtn) { submitBtn.disabled = true; submitBtn.setAttribute('aria-busy', 'true'); }
+    });
+
+    // 戻る操作でキャッシュから復元された場合は、無効化した送信ボタンを戻す
+    window.addEventListener('pageshow', function (e) {
+      if (e.persisted) unlockSubmit();
     });
 
     // FormSubmit から ?sent=1 付きで戻ってきたら完了メッセージを表示し、URL を元に戻す
     if (/[?&]sent=1(?:&|$)/.test(window.location.search)) {
-      showFormStatus(true, 'お問い合わせを送信しました。内容を確認のうえ、担当者よりご返信いたします。');
+      showFormStatus(true, 'お問い合わせありがとうございます。送信が完了しました。内容を確認のうえ、担当者よりご返信いたします。');
       if (window.history && window.history.replaceState) {
         window.history.replaceState(null, '', window.location.pathname);
       }
