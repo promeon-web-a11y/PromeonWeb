@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>お問い合わせ・無料相談｜Promeon Web</title>
+<meta name="description" content="Promeon Web へのお問い合わせ・無料相談はこちら。フォーム・メール・公式LINEから受け付けています。ご相談とお見積りは無料です。">
+<meta name="theme-color" content="#1c3a5e">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="ja_JP">
+<meta property="og:title" content="お問い合わせ・無料相談｜Promeon Web">
+<meta property="og:description" content="フォーム・メール・公式LINEから受付。ご相談とお見積りは無料です。">
+<meta property="og:image" content="images/ogp-placeholder.svg">
+<link rel="icon" href="images/favicon.png" type="image/png" sizes="any">
+<link rel="apple-touch-icon" href="images/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Noto+Serif+JP:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<!-- Promeon Web サイトサンプル／お問い合わせページ。フォームは表示確認用サンプルで送信処理はダミー（JSでダミー完了表示）。
+     電話番号・受付時間は要確認のため掲載せず、メール・フォーム・公式LINEのみ案内。動きは控えめ（main.quiet）。 -->
+</head>
+<body>
+<a class="skip-link" href="#main">本文へスキップ</a>
+
+<header class="site-header" id="siteHeader">
+  <div class="container header-inner">
+    <a href="index.html" class="logo-area" aria-label="Promeon Web トップへ">
+      <img src="images/favicon.png" alt="" class="logo-mark" width="34" height="34">
+      <span class="logo-text">
+        <span class="logo-name">Promeon Web</span>
+        <span class="logo-sub">中小企業・個人事業主のためのWeb制作</span>
+      </span>
+    </a>
+    <nav class="header-nav" aria-label="メインメニュー">
+      <a href="index.html" class="header-nav-link">TOP</a>
+      <a href="plans.html" class="header-nav-link">料金</a>
+      <a href="samples.html" class="header-nav-link">サンプル</a>
+      <a href="aio-geo.html" class="header-nav-link">AIO/GEO</a>
+      <a href="flow.html" class="header-nav-link">制作の流れ</a>
+      <a href="recruit-support.html" class="header-nav-link">採用支援</a>
+      <a href="faq.html" class="header-nav-link">よくある質問</a>
+      <a href="company.html" class="header-nav-link">会社概要</a>
+    </nav>
+    <div class="header-actions">
+      <a href="contact.html" class="btn btn-primary btn-sm header-cta" aria-current="page">無料相談・無料見積り</a>
+      <button type="button" class="menu-btn" id="menuBtn" aria-label="メニューを開く" aria-expanded="false" aria-controls="siteNav">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+  <nav class="site-nav" id="siteNav" aria-label="メインメニュー">
+    <div class="site-nav-inner">
+      <p class="site-nav-heading">MENU</p>
+      <ul>
+        <li><a href="index.html" class="nav-link">TOP<span>トップ</span></a></li>
+        <li><a href="plans.html" class="nav-link">PRICING<span>料金・プラン</span></a></li>
+        <li><a href="samples.html" class="nav-link">SAMPLES<span>制作サンプル</span></a></li>
+        <li><a href="aio-geo.html" class="nav-link">AIO / GEO<span>AIO/GEO対応について</span></a></li>
+        <li><a href="flow.html" class="nav-link">FLOW<span>制作の流れ</span></a></li>
+        <li><a href="recruit-support.html" class="nav-link">RECRUIT<span>採用支援</span></a></li>
+        <li><a href="faq.html" class="nav-link">FAQ<span>よくある質問</span></a></li>
+        <li><a href="company.html" class="nav-link">COMPANY<span>会社概要</span></a></li>
+        <li><a href="contact.html" class="nav-link" aria-current="page">CONTACT<span>お問い合わせ</span></a></li>
+      </ul>
+      <div class="site-nav-foot">
+        <p>Promeon Web</p>
+        <p>お問い合わせ：<a href="mailto:satokazu.promeon@gmail.com">satokazu.promeon@gmail.com</a></p>
+        <p>ご相談・お見積りは無料です。</p>
+      </div>
+    </div>
+  </nav>
+</header>
+
+<main id="main" class="quiet">
+  <section class="page-hero">
+    <img src="images/page-hero-placeholder.svg" alt="" class="page-hero-img" aria-hidden="true">
+    <div class="page-hero-inner">
+      <p class="page-hero-kicker">CONTACT</p>
+      <h1>お問い合わせ・無料相談</h1>
+      <p>Webサイト制作のご相談、お見積りのご依頼、その他ご質問など、どんな内容でもかまいません。ご相談・お見積りは無料です。</p>
+    </div>
+  </section>
+  <nav class="breadcrumb" aria-label="パンくずリスト">
+    <ol>
+      <li><a href="index.html">TOP</a></li>
+      <li aria-current="page">お問い合わせ</li>
+    </ol>
+  </nav>
+
+  <section class="section">
+    <div class="container">
+      <div class="split" style="align-items:flex-start;">
+        <div class="split-body">
+          <div class="form-wrap">
+            <form id="contactForm" novalidate>
+              <div class="field">
+                <label for="cf-name">お名前<span class="req">必須</span></label>
+                <input type="text" id="cf-name" name="name" autocomplete="name" required>
+              </div>
+              <div class="field">
+                <label for="cf-company">会社名・屋号<span class="opt">任意</span></label>
+                <input type="text" id="cf-company" name="company" autocomplete="organization">
+              </div>
+              <div class="field">
+                <label for="cf-email">メールアドレス<span class="req">必須</span></label>
+                <input type="email" id="cf-email" name="email" autocomplete="email" required>
+                <p class="hint">ご返信先として使用します。</p>
+              </div>
+              <div class="field">
+                <label for="cf-plan">ご検討中のプラン<span class="opt">任意</span></label>
+                <select id="cf-plan" name="plan">
+                  <option value="">選択しない・わからない</option>
+                  <option value="mini">Mini</option>
+                  <option value="standard">Standard</option>
+                  <option value="pro">Pro</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="cf-body">お問い合わせ内容<span class="req">必須</span></label>
+                <textarea id="cf-body" name="body" required placeholder="作りたいサイトのイメージ、掲載したい内容、ご予算感、参考サイトのURLなど、わかる範囲でご記入ください。"></textarea>
+              </div>
+              <p class="inline-note">このフォームは表示確認用のサンプルです。送信ボタンを押しても実際には送信されません。</p>
+              <button type="submit" class="btn btn-primary btn-lg btn-block mt-16">送信する（サンプル）</button>
+              <p class="form-status" id="formStatus" role="status" aria-live="polite"></p>
+            </form>
+          </div>
+        </div>
+        <aside class="contact-aside">
+          <h3>メール・LINEでのご相談</h3>
+          <p>フォームのほか、以下からもお問い合わせいただけます。</p>
+          <p class="mb-0">メール：<br><a href="mailto:satokazu.promeon@gmail.com">satokazu.promeon@gmail.com</a></p>
+          <hr>
+          <p class="mb-0">公式LINE：<br><a href="https://lin.ee/onG5cTt">友だち追加はこちら</a></p>
+          <hr>
+          <p class="mb-0">SNS：<br><a href="https://www.instagram.com/PromeonWeb/">Instagram（@PromeonWeb）</a><br><a href="https://www.facebook.com/profile.php?id=61594058514921">Facebook</a></p>
+          <hr>
+          <p class="inline-note mb-0">ご相談・お見積りは無料です。内容と料金をご確認いただいてから、正式にご依頼いただけます。返信の目安は要確認です。</p>
+        </aside>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <p class="f-name">Promeon Web</p>
+        <p class="f-catch">新しい火を灯し、未来を切り拓く</p>
+        <p>中小企業・個人事業主向けに、チャット中心でWebサイトを制作するサービスです。<br>お問い合わせ：<a href="mailto:satokazu.promeon@gmail.com" style="color:#fff;">satokazu.promeon@gmail.com</a><br>公式LINE：<a href="https://lin.ee/onG5cTt" style="color:#fff;">友だち追加はこちら</a><br>Instagram：<a href="https://www.instagram.com/PromeonWeb/" style="color:#fff;">@PromeonWeb</a>／Facebook：<a href="https://www.facebook.com/profile.php?id=61594058514921" style="color:#fff;">ページ</a></p>
+        <p>所在地・受付時間：要確認</p>
+      </div>
+      <div class="footer-col">
+        <h3>サービス</h3>
+        <ul>
+          <li><a href="plans.html">料金・プラン</a></li>
+          <li><a href="samples.html">制作サンプル</a></li>
+          <li><a href="aio-geo.html">AIO/GEO対応について</a></li>
+          <li><a href="flow.html">制作の流れ</a></li>
+          <li><a href="recruit-support.html">採用支援</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h3>会社・ご相談</h3>
+        <ul>
+          <li><a href="faq.html">よくある質問</a></li>
+          <li><a href="company.html">会社概要</a></li>
+          <li><a href="contact.html">お問い合わせ</a></li>
+        </ul>
+      </div>
+    </div>
+    <nav class="footer-nav" aria-label="フッターメニュー">
+      <a href="index.html">TOP</a>
+      <a href="plans.html">料金・プラン</a>
+      <a href="samples.html">制作サンプル</a>
+      <a href="aio-geo.html">AIO/GEO対応について</a>
+      <a href="flow.html">制作の流れ</a>
+      <a href="recruit-support.html">採用支援</a>
+      <a href="faq.html">よくある質問</a>
+      <a href="company.html">会社概要</a>
+      <a href="contact.html">お問い合わせ</a>
+    </nav>
+    <div class="footer-bottom">
+      <span>Promeon Web／中小企業・個人事業主のためのWeb制作サービス</span>
+      <span>&copy; <span id="copyYear">2026</span> Promeon Web</span>
+    </div>
+  </div>
+</footer>
+
+<div class="mobile-cta">
+  <a href="contact.html" class="mc-contact">無料相談・無料見積り</a>
+  <a href="plans.html" class="mc-plans">料金</a>
+</div>
+
+<script src="js/script.js"></script>
+</body>
+</html>

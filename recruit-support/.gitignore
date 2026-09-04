@@ -1,0 +1,10 @@
+node_modules
+.DS_Store
+*.local
+.env
+.env.*
+!.env.example
+
+# dist はコミット対象に含める。
+# promeon-web サンプルのメニュー「採用支援」がこの dist/ を直接参照するため、
+# ビルド成果物をサンプルと一緒に配布・移動できるようにする。

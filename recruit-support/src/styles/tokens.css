@@ -1,0 +1,119 @@
+/* ==============================================================
+   デザイントークン
+   - 色 / フォント / 余白 / 角丸 / 影 / モーション を一元管理
+   - 変更は原則このファイルだけで完結させる
+   ============================================================== */
+
+:root {
+  /* ---- 色：ベース ---------------------------------------------- */
+  --c-bg: #fafaf8; /* オフホワイト */
+  --c-bg-elevated: #ffffff; /* カード等、少し持ち上げる面 */
+  --c-bg-alt: #f2f4f7; /* 薄いブルーグレー：セクションの切り替え */
+  --c-bg-navy: #1a2b4c; /* ネイビー面（フッター・CTA等） */
+
+  /* ---- 色：メインアクセント（ネイビー） ------------------------ */
+  --c-navy: #1a2b4c;
+  --c-navy-600: #22376b; /* ホバー等でわずかに明るく */
+  --c-navy-900: #101b31; /* さらに沈めたい時 */
+
+  /* ---- 色：サブアクセント（ブルーグレー） -------------------- */
+  --c-slate: #5b6b86;
+  --c-slate-200: #d7dde6;
+  --c-slate-100: #e7ebf1;
+
+  /* ---- 色：差し色（テラコッタ／オレンジ） -------------------- */
+  --c-accent: #c8623d; /* テラコッタ */
+  --c-accent-600: #b0512f; /* ホバー */
+  --c-accent-soft: #f6e7df; /* アイコン背景など淡い面 */
+
+  /* ---- 色：テキスト ------------------------------------------ */
+  --c-text: #232a35; /* 本文 */
+  --c-text-muted: #5c6673; /* 補足 */
+  --c-text-on-navy: #eef1f6; /* ネイビー面上の文字 */
+  --c-text-on-navy-muted: #a9b6cd;
+
+  /* ---- 色：ライン ------------------------------------------- */
+  --c-border: #e4e2db;
+  --c-border-strong: #cfccc2;
+
+  /* ---- フォント -------------------------------------------- */
+  /* 見出し：明朝（誠実さ・上品さ） */
+  --font-serif: "Shippori Mincho", "Yu Mincho", "YuMincho", "Hiragino Mincho ProN",
+    "Hiragino Mincho Pro", "Noto Serif JP", "MS PMincho", serif;
+  /* 本文・UI／AI・スピード訴求のゴシック */
+  --font-sans: "Yu Gothic", "YuGothic", "Hiragino Kaku Gothic ProN", "Hiragino Sans",
+    "Noto Sans JP", "Segoe UI", system-ui, sans-serif;
+  /* 数字・ラベルの英字強調 */
+  --font-en: "Inter", "Segoe UI", system-ui, sans-serif;
+
+  /* ---- タイポスケール（clampで流体） ------------------------ */
+  --fs-hero: clamp(2.25rem, 1.4rem + 3.6vw, 4rem);
+  --fs-h2: clamp(1.6rem, 1.15rem + 1.9vw, 2.5rem);
+  --fs-h3: clamp(1.15rem, 0.98rem + 0.7vw, 1.4rem);
+  --fs-lead: clamp(1rem, 0.95rem + 0.25vw, 1.15rem);
+  --fs-body: 1rem;
+  --fs-small: 0.875rem;
+  --fs-caption: 0.78rem;
+
+  --lh-tight: 1.35;
+  --lh-heading: 1.5;
+  --lh-body: 1.85;
+
+  /* ---- 余白スケール（8pxベース） -------------------------- */
+  --sp-1: 0.25rem;
+  --sp-2: 0.5rem;
+  --sp-3: 0.75rem;
+  --sp-4: 1rem;
+  --sp-5: 1.5rem;
+  --sp-6: 2rem;
+  --sp-7: 3rem;
+  --sp-8: 4rem;
+  --sp-9: 6rem;
+  --sp-10: 8rem;
+  /* セクションの上下パディング（レスポンシブ） */
+  --section-y: clamp(3.5rem, 2.5rem + 5vw, 7rem);
+
+  /* ---- レイアウト ---------------------------------------- */
+  --container: 1120px;
+  --container-narrow: 760px;
+  --gutter: clamp(1.25rem, 0.8rem + 2.2vw, 2.5rem);
+  --header-h: 76px;
+  --header-h-scrolled: 60px;
+
+  /* ---- 角丸 -------------------------------------------- */
+  --r-sm: 6px;
+  --r-md: 12px;
+  --r-lg: 20px;
+  --r-pill: 999px;
+
+  /* ---- 影 --------------------------------------------- */
+  --shadow-sm: 0 1px 3px rgba(26, 43, 76, 0.06), 0 1px 2px rgba(26, 43, 76, 0.04);
+  --shadow-md: 0 8px 24px rgba(26, 43, 76, 0.08);
+  --shadow-lg: 0 20px 48px rgba(26, 43, 76, 0.12);
+  --shadow-header: 0 6px 24px rgba(26, 43, 76, 0.08);
+
+  /* ---- モーション ------------------------------------- */
+  /* 上品さは「緩急のあるイージング」で表現する */
+  --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out-soft: cubic-bezier(0.65, 0, 0.35, 1);
+  --dur-fast: 0.25s;
+  --dur-mid: 0.5s;
+  --dur-slow: 0.9s;
+
+  /* ---- z-index ------------------------------------- */
+  --z-header: 100;
+  --z-overlay: 200;
+  --z-hero-veil: 300;
+
+  color-scheme: light;
+}
+
+/* モーション低減：トランジション/アニメーションを実質無効化し、
+   即時表示へ切り替える（詳細な出し分けは各CSS/JS側でも尊重する） */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --dur-fast: 0.001s;
+    --dur-mid: 0.001s;
+    --dur-slow: 0.001s;
+  }
+}

@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" role="img" aria-label="Promeon Web">
+<defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1">
+<stop offset="0" stop-color="#ef7f33"/><stop offset="0.55" stop-color="#c5506a"/><stop offset="1" stop-color="#1c3a5e"/>
+</linearGradient></defs>
+<rect width="1200" height="630" fill="url(#g)"/>
+<circle cx="740" cy="300" r="90" fill="#fff1da" opacity="0.9"/>
+<text x="80" y="330" font-family="'Noto Serif JP',serif" font-size="66" font-weight="700" fill="#ffffff">Promeon Web</text>
+<text x="82" y="392" font-family="'Noto Sans JP',sans-serif" font-size="30" fill="#ffffff" opacity="0.9">新しい火を灯し、未来を切り拓く</text>
+</svg>

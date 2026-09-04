@@ -1,0 +1,300 @@
+/* ==============================================================
+   ベース：リセット / タイポグラフィ / レイアウト土台 / 汎用ユーティリティ
+   ============================================================== */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+* {
+  margin: 0;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  /* スムーススクロールは Lenis 側で担当。JS無効時のみブラウザ標準を使う */
+}
+
+html.no-js {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-sans);
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+  color: var(--c-text);
+  background: var(--c-bg);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overflow-x: hidden;
+}
+
+img,
+picture,
+svg,
+video {
+  display: block;
+  max-width: 100%;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+ul,
+ol {
+  list-style: none;
+  padding: 0;
+}
+
+/* hidden 属性は常に非表示（display を持つコンポーネントより優先） */
+[hidden] {
+  display: none !important;
+}
+
+:focus-visible {
+  outline: 2px solid var(--c-accent);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* ---- 見出し ------------------------------------------------ */
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-serif);
+  font-weight: 600;
+  line-height: var(--lh-heading);
+  letter-spacing: 0.02em;
+}
+
+/* ---- レイアウト土台 -------------------------------------- */
+.container {
+  width: 100%;
+  max-width: var(--container);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+.container--narrow {
+  max-width: var(--container-narrow);
+}
+
+.section {
+  padding-block: var(--section-y);
+}
+
+.section--alt {
+  background: var(--c-bg-alt);
+}
+
+.section--navy {
+  background: var(--c-bg-navy);
+  color: var(--c-text-on-navy);
+}
+
+.section--navy h2,
+.section--navy h3 {
+  color: var(--c-text-on-navy);
+}
+
+/* セクション見出しブロック */
+.section-head {
+  max-width: 40rem;
+  margin-bottom: clamp(2rem, 1.4rem + 2.6vw, 3.5rem);
+}
+
+.section-head__eyebrow {
+  display: inline-block;
+  font-family: var(--font-en);
+  font-size: var(--fs-caption);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--c-accent);
+  margin-bottom: var(--sp-3);
+}
+
+.section--navy .section-head__eyebrow {
+  color: var(--c-accent);
+}
+
+.section-head__title {
+  font-size: var(--fs-h2);
+}
+
+.section-head__lead {
+  margin-top: var(--sp-4);
+  font-size: var(--fs-lead);
+  color: var(--c-text-muted);
+}
+
+.section--navy .section-head__lead {
+  color: var(--c-text-on-navy-muted);
+}
+
+/* ---- ボタン --------------------------------------------- */
+.btn {
+  --btn-bg: var(--c-navy);
+  --btn-fg: #fff;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6em;
+  padding: 0.95em 1.8em;
+  font-family: var(--font-sans);
+  font-size: var(--fs-small);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--btn-fg);
+  background: var(--btn-bg);
+  border-radius: var(--r-pill);
+  overflow: hidden;
+  isolation: isolate;
+  transition: transform var(--dur-fast) var(--ease-out-soft),
+    box-shadow var(--dur-fast) var(--ease-out-soft);
+}
+
+/* hoverで差し色が左からスライドイン */
+.btn::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--c-accent);
+  transform: translateX(-101%);
+  transition: transform var(--dur-mid) var(--ease-out-soft);
+}
+
+.btn:hover,
+.btn:focus-visible {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.btn:hover::before,
+.btn:focus-visible::before {
+  transform: translateX(0);
+}
+
+.btn__arrow {
+  transition: transform var(--dur-fast) var(--ease-out-soft);
+}
+
+.btn:hover .btn__arrow {
+  transform: translateX(4px);
+}
+
+.btn--accent {
+  --btn-bg: var(--c-accent);
+}
+
+.btn--accent::before {
+  background: var(--c-navy);
+}
+
+.btn--ghost {
+  --btn-bg: transparent;
+  --btn-fg: var(--c-navy);
+  border: 1px solid var(--c-border-strong);
+}
+
+.btn--ghost::before {
+  background: var(--c-navy);
+}
+
+.btn--ghost:hover,
+.btn--ghost:focus-visible {
+  --btn-fg: #fff;
+}
+
+.btn--on-navy {
+  --btn-bg: #fff;
+  --btn-fg: var(--c-navy);
+}
+
+.btn--lg {
+  padding: 1.1em 2.2em;
+  font-size: var(--fs-body);
+}
+
+/* ---- 汎用 --------------------------------------------- */
+.u-gothic {
+  font-family: var(--font-sans);
+  letter-spacing: 0.01em;
+}
+
+.u-en {
+  font-family: var(--font-en);
+}
+
+.visually-hidden {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.skip-link {
+  position: absolute;
+  left: var(--sp-4);
+  top: -100%;
+  z-index: var(--z-overlay);
+  padding: 0.7em 1.2em;
+  background: var(--c-navy);
+  color: #fff;
+  border-radius: var(--r-sm);
+  transition: top var(--dur-fast) var(--ease-out-soft);
+}
+
+.skip-link:focus {
+  top: var(--sp-4);
+}
+
+/* ==============================================================
+   スクロールインの初期状態（JSが .is-inview を付与して表示）
+   - prefers-reduced-motion / no-js の時は初期状態を無効化して即表示
+   ============================================================== */
+[data-reveal] {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity var(--dur-slow) var(--ease-out-soft),
+    transform var(--dur-slow) var(--ease-out-soft);
+  will-change: opacity, transform;
+}
+
+[data-reveal].is-inview {
+  opacity: 1;
+  transform: none;
+}
+
+html.no-js [data-reveal],
+html.reduce-motion [data-reveal] {
+  opacity: 1;
+  transform: none;
+  transition: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-reveal] {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}

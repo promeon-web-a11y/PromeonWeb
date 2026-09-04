@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900" role="img" aria-label="Promeon Web の紹介イメージ（差し替え用画像）">
+<rect width="1200" height="900" fill="#f3f5f8"/>
+<path d="M0 620 L360 470 L640 590 L940 440 L1200 560 L1200 900 L0 900 Z" fill="#1c3a5e" opacity="0.12"/>
+<path d="M0 740 L320 650 L680 745 L980 610 L1200 720 L1200 900 L0 900 Z" fill="#e8672a" opacity="0.14"/>
+<circle cx="940" cy="250" r="80" fill="#e8672a" opacity="0.16"/>
+<g font-family="'Noto Sans JP',sans-serif" text-anchor="middle">
+<text x="600" y="430" font-size="52" font-weight="700" fill="#1c3a5e">Promeon Web</text>
+<text x="600" y="486" font-size="28" fill="#454b53">紹介イメージ（写真素材は要確認）</text>
+</g>
+</svg>

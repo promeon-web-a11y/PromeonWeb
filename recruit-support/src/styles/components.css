@@ -1,0 +1,381 @@
+/* ==============================================================
+   横断コンポーネント：ヘッダー / ナビ / モバイルメニュー / フッター /
+   アコーディオン / 統計（stat）
+   ============================================================== */
+
+/* ---- サイトヘッダー -------------------------------------- */
+.site-header {
+  position: fixed;
+  inset: 0 0 auto 0;
+  z-index: var(--z-header);
+  height: var(--header-h);
+  display: flex;
+  align-items: center;
+  background: transparent;
+  transition: height var(--dur-mid) var(--ease-out-soft),
+    background-color var(--dur-mid) var(--ease-out-soft),
+    box-shadow var(--dur-mid) var(--ease-out-soft),
+    border-color var(--dur-mid) var(--ease-out-soft);
+  border-bottom: 1px solid transparent;
+}
+
+.site-header.is-scrolled {
+  height: var(--header-h-scrolled);
+  background: color-mix(in srgb, var(--c-bg-elevated) 92%, transparent);
+  backdrop-filter: saturate(1.1) blur(8px);
+  box-shadow: var(--shadow-header);
+  border-bottom-color: var(--c-border);
+}
+
+.site-header__inner {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-5);
+  width: 100%;
+}
+
+.site-logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55em;
+  font-family: var(--font-serif);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--c-navy);
+  transition: color var(--dur-mid) var(--ease-out-soft);
+}
+
+/* FVの上（未スクロール）では白抜き */
+.site-header:not(.is-scrolled) .site-logo {
+  color: #fff;
+}
+
+.site-logo__mark {
+  width: 1.65em;
+  height: 1.65em;
+  border-radius: 6px;
+  background: linear-gradient(135deg, var(--c-accent), var(--c-navy));
+  transition: width var(--dur-mid) var(--ease-out-soft),
+    height var(--dur-mid) var(--ease-out-soft);
+}
+
+.site-header.is-scrolled .site-logo__mark {
+  width: 1.4em;
+  height: 1.4em;
+}
+
+.site-logo__text {
+  font-size: clamp(1rem, 0.95rem + 0.3vw, 1.2rem);
+  transition: font-size var(--dur-mid) var(--ease-out-soft);
+}
+
+.site-header.is-scrolled .site-logo__text {
+  font-size: 1rem;
+}
+
+.site-nav {
+  margin-left: auto;
+}
+
+.site-nav__list {
+  display: flex;
+  gap: clamp(1rem, 0.4rem + 1.6vw, 2rem);
+}
+
+.site-nav__link {
+  position: relative;
+  font-size: var(--fs-small);
+  font-weight: 500;
+  letter-spacing: 0.03em;
+  color: var(--c-text);
+  transition: color var(--dur-fast) var(--ease-out-soft);
+}
+
+.site-header:not(.is-scrolled) .site-nav__link {
+  color: rgba(255, 255, 255, 0.88);
+}
+
+.site-nav__link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -6px;
+  width: 100%;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--dur-fast) var(--ease-out-soft);
+}
+
+.site-nav__link:hover {
+  color: var(--c-accent);
+}
+
+.site-header:not(.is-scrolled) .site-nav__link:hover {
+  color: #fff;
+}
+
+.site-nav__link:hover::after {
+  transform: scaleX(1);
+}
+
+.site-header__cta {
+  padding: 0.7em 1.4em;
+  font-size: var(--fs-caption);
+}
+
+.site-header__toggle {
+  display: none;
+  width: 44px;
+  height: 44px;
+  margin-left: auto;
+  position: relative;
+}
+
+.site-header__toggle-bar,
+.site-header__toggle-bar::before,
+.site-header__toggle-bar::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  width: 22px;
+  height: 2px;
+  background: var(--c-navy);
+  transform: translateX(-50%);
+  transition: transform var(--dur-fast) var(--ease-out-soft),
+    opacity var(--dur-fast) var(--ease-out-soft);
+}
+
+.site-header:not(.is-scrolled) .site-header__toggle-bar,
+.site-header:not(.is-scrolled) .site-header__toggle-bar::before,
+.site-header:not(.is-scrolled) .site-header__toggle-bar::after {
+  background: #fff;
+}
+
+.site-header__toggle-bar {
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+.site-header__toggle-bar::before {
+  top: -7px;
+}
+.site-header__toggle-bar::after {
+  top: 7px;
+}
+
+.site-header.is-menu-open .site-header__toggle-bar {
+  background: transparent;
+}
+.site-header.is-menu-open .site-header__toggle-bar::before {
+  top: 0;
+  transform: translateX(-50%) rotate(45deg);
+  background: var(--c-navy);
+}
+.site-header.is-menu-open .site-header__toggle-bar::after {
+  top: 0;
+  transform: translateX(-50%) rotate(-45deg);
+  background: var(--c-navy);
+}
+
+/* ---- モバイルメニュー ---------------------------------- */
+.site-menu {
+  position: fixed;
+  inset: var(--header-h-scrolled) 0 0 0;
+  z-index: calc(var(--z-header) - 1);
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-6);
+  padding: var(--sp-7) var(--gutter) var(--sp-8);
+  background: var(--c-bg-elevated);
+  overflow-y: auto;
+}
+
+.site-menu__nav ul {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+}
+
+.site-menu__nav a {
+  display: block;
+  padding: var(--sp-4) 0;
+  font-family: var(--font-serif);
+  font-size: 1.25rem;
+  border-bottom: 1px solid var(--c-border);
+}
+
+body.is-menu-locked {
+  overflow: hidden;
+}
+
+/* ---- フッター ----------------------------------------- */
+.site-footer {
+  background: var(--c-bg-navy);
+  color: var(--c-text-on-navy);
+  padding-top: var(--sp-9);
+}
+
+.site-footer__inner {
+  display: grid;
+  gap: var(--sp-6);
+  grid-template-columns: 1.4fr 1fr 1fr;
+  padding-bottom: var(--sp-8);
+}
+
+.site-footer__desc {
+  margin-top: var(--sp-3);
+  color: var(--c-text-on-navy-muted);
+  font-size: var(--fs-small);
+  max-width: 34ch;
+}
+
+.site-footer__nav ul,
+.site-footer__contact {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+  font-size: var(--fs-small);
+}
+
+.site-footer__nav a:hover,
+.site-footer__contact a:hover {
+  color: var(--c-accent);
+}
+
+.site-footer__bottom {
+  padding-block: var(--sp-5);
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  color: var(--c-text-on-navy-muted);
+  font-size: var(--fs-caption);
+}
+
+/* ---- アコーディオン（サービス / FAQ 共通） ------------- */
+.accordion {
+  border-top: 1px solid var(--c-border);
+}
+
+.accordion__item {
+  border-bottom: 1px solid var(--c-border);
+}
+
+.accordion__heading {
+  margin: 0;
+  font-family: var(--font-sans);
+}
+
+.accordion__trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-4);
+  width: 100%;
+  padding: var(--sp-5) var(--sp-2);
+  text-align: left;
+  font-family: var(--font-serif);
+  font-size: var(--fs-h3);
+  font-weight: 600;
+  color: var(--c-text);
+  transition: color var(--dur-fast) var(--ease-out-soft);
+}
+
+.accordion__trigger:hover {
+  color: var(--c-accent);
+}
+
+.accordion__icon {
+  position: relative;
+  flex: none;
+  width: 18px;
+  height: 18px;
+}
+
+.accordion__icon::before,
+.accordion__icon::after {
+  content: "";
+  position: absolute;
+  inset: 50% 0 auto 0;
+  height: 2px;
+  background: currentColor;
+  transition: transform var(--dur-fast) var(--ease-out-soft);
+}
+
+.accordion__icon::after {
+  transform: translateY(-50%) rotate(90deg);
+}
+
+.accordion__trigger[aria-expanded="true"] .accordion__icon::after {
+  transform: translateY(-50%) rotate(0);
+}
+
+.accordion__panel {
+  overflow: hidden;
+}
+
+.accordion__panel-inner {
+  padding: 0 var(--sp-2) var(--sp-6);
+  color: var(--c-text-muted);
+  max-width: 60ch;
+}
+
+/* ---- 統計（stat） ------------------------------------- */
+.stat-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--sp-5);
+  margin-top: var(--sp-8);
+  padding-top: var(--sp-7);
+  border-top: 1px solid var(--c-border);
+}
+
+.stat {
+  text-align: center;
+}
+
+.stat__value {
+  display: block;
+  font-size: clamp(2rem, 1.4rem + 2.4vw, 3.2rem);
+  font-weight: 700;
+  color: var(--c-navy);
+  line-height: 1.1;
+}
+
+.stat__suffix {
+  font-size: 0.42em;
+  margin-left: 0.2em;
+  color: var(--c-text-muted);
+}
+
+.stat__label {
+  display: block;
+  margin-top: var(--sp-3);
+  font-size: var(--fs-caption);
+  color: var(--c-text-muted);
+}
+
+.stat-note {
+  margin-top: var(--sp-5);
+  font-size: var(--fs-caption);
+  color: var(--c-text-muted);
+}
+
+/* ---- レスポンシブ ------------------------------------- */
+@media (max-width: 860px) {
+  .site-nav,
+  .site-header__cta {
+    display: none;
+  }
+  .site-header__toggle {
+    display: block;
+  }
+  .site-footer__inner {
+    grid-template-columns: 1fr 1fr;
+  }
+  .site-footer__brand {
+    grid-column: 1 / -1;
+  }
+  .stat-row {
+    grid-template-columns: 1fr;
+    gap: var(--sp-6);
+  }
+}

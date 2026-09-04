@@ -1,0 +1,576 @@
+/* ==============================================================
+   トップページ セクション別スタイル
+   ============================================================== */
+
+/* ============================================================
+   ① ファーストビュー
+   ========================================================== */
+.hero {
+  position: relative;
+  min-height: 100svh;
+  display: flex;
+  align-items: center;
+  color: #fff;
+  overflow: hidden;
+}
+
+.hero__media {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: linear-gradient(160deg, #24344f 0%, #1a2b4c 45%, #12203a 100%);
+}
+
+.hero__media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.hero__media.is-imgless img {
+  display: none;
+}
+
+.hero__scrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+      180deg,
+      rgba(16, 27, 49, 0.55) 0%,
+      rgba(16, 27, 49, 0.25) 40%,
+      rgba(16, 27, 49, 0.65) 100%
+    ),
+    linear-gradient(90deg, rgba(16, 27, 49, 0.55) 0%, rgba(16, 27, 49, 0) 60%);
+}
+
+.hero__inner {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  padding-top: var(--header-h);
+}
+
+.hero__copy {
+  max-width: 22ch;
+}
+
+.hero__title {
+  font-size: var(--fs-hero);
+  font-weight: 700;
+  line-height: 1.3;
+  letter-spacing: 0.03em;
+  text-shadow: 0 2px 30px rgba(0, 0, 0, 0.25);
+}
+
+.hero__sub {
+  margin-top: var(--sp-5);
+  max-width: 36ch;
+  font-family: var(--font-sans);
+  font-size: var(--fs-lead);
+  line-height: 1.9;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-4);
+  margin-top: var(--sp-7);
+}
+
+.hero__veil {
+  position: absolute;
+  inset: 0;
+  z-index: var(--z-hero-veil);
+  background: var(--c-bg);
+  pointer-events: none;
+}
+
+/* JS無効・モーション低減時：白レイヤーを出さない */
+html.no-js .hero__veil,
+html.reduce-motion .hero__veil {
+  display: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero__veil {
+    display: none;
+  }
+}
+
+.hero__scroll {
+  position: absolute;
+  left: 50%;
+  bottom: 28px;
+  z-index: 2;
+  transform: translateX(-50%);
+  width: 1px;
+  height: 56px;
+  overflow: hidden;
+}
+
+.hero__scroll-line {
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.5);
+}
+
+.hero__scroll-line::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: #fff;
+  animation: heroScroll 2.4s var(--ease-in-out-soft) infinite;
+}
+
+@keyframes heroScroll {
+  0% {
+    transform: translateY(-100%);
+  }
+  60%,
+  100% {
+    transform: translateY(100%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero__scroll-line::after {
+    animation: none;
+  }
+}
+
+/* ============================================================
+   ② あるある課題
+   ========================================================== */
+.issue-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--sp-5);
+}
+
+.issue-card {
+  position: relative;
+  padding: var(--sp-6);
+  background: var(--c-bg-elevated);
+  border: 1px solid var(--c-border);
+  border-radius: var(--r-md);
+  box-shadow: var(--shadow-sm);
+  transition: transform var(--dur-fast) var(--ease-out-soft),
+    box-shadow var(--dur-fast) var(--ease-out-soft);
+}
+
+.issue-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-md);
+}
+
+.issue-card__index {
+  font-size: var(--fs-caption);
+  font-weight: 700;
+  color: var(--c-accent);
+  letter-spacing: 0.1em;
+}
+
+.issue-card__title {
+  margin-top: var(--sp-3);
+  font-size: var(--fs-h3);
+}
+
+.issue-card__body {
+  margin-top: var(--sp-3);
+  font-size: var(--fs-small);
+  color: var(--c-text-muted);
+}
+
+/* ============================================================
+   ③ 根拠（フロー図解 ＋ 数値）
+   ========================================================== */
+.reason-flow {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--sp-6);
+  margin-bottom: var(--sp-6);
+}
+
+.reason-step {
+  position: relative;
+  padding: var(--sp-6);
+  background: var(--c-bg-elevated);
+  border: 1px solid var(--c-border);
+  border-radius: var(--r-md);
+}
+
+.reason-step__num {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--c-slate);
+}
+
+.reason-step__title {
+  margin: var(--sp-3) 0;
+  font-size: var(--fs-h3);
+}
+
+.reason-step__body p {
+  font-size: var(--fs-small);
+  color: var(--c-text-muted);
+}
+
+.reason-step__connector {
+  position: absolute;
+  top: 50%;
+  right: calc(var(--sp-6) / -2 - 6px);
+  width: 12px;
+  height: 12px;
+  border-top: 2px solid var(--c-slate-200);
+  border-right: 2px solid var(--c-slate-200);
+  transform: translateY(-50%) rotate(45deg);
+}
+
+/* ============================================================
+   ④ 3本柱
+   ========================================================== */
+.pillar-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--sp-5);
+}
+
+.pillar-card {
+  padding: var(--sp-7) var(--sp-6);
+  background: var(--c-bg-elevated);
+  border: 1px solid var(--c-border);
+  border-radius: var(--r-lg);
+  border-top: 3px solid var(--c-navy);
+}
+
+.pillar-card--ai {
+  border-top-color: var(--c-accent);
+}
+.pillar-card--sns {
+  border-top-color: var(--c-slate);
+}
+
+.pillar-card__label {
+  display: inline-block;
+  font-size: var(--fs-caption);
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: var(--c-text-muted);
+}
+
+.pillar-card__headline {
+  margin: var(--sp-3) 0 var(--sp-4);
+  font-size: var(--fs-h3);
+}
+
+/* AI・スピード訴求カードだけゴシックでメリハリ */
+.pillar-card--ai .pillar-card__headline,
+.pillar-card--speed .pillar-card__headline {
+  font-family: var(--font-sans);
+  font-weight: 700;
+  letter-spacing: 0;
+}
+
+.pillar-card__body {
+  font-size: var(--fs-small);
+  color: var(--c-text-muted);
+}
+
+/* ============================================================
+   ⑥ 3ヶ月ロードマップ
+   ========================================================== */
+.roadmap {
+  position: relative;
+}
+
+.roadmap__track {
+  position: absolute;
+  left: 19px;
+  top: 8px;
+  bottom: 8px;
+  width: 2px;
+  background: rgba(255, 255, 255, 0.16);
+  border-radius: 2px;
+}
+
+.roadmap__progress {
+  --progress: 0%;
+  position: absolute;
+  inset: 0 auto auto 0;
+  width: 2px;
+  height: var(--progress);
+  background: var(--c-accent);
+  border-radius: 2px;
+  transition: height 0.1s linear;
+}
+
+.roadmap__steps {
+  display: grid;
+  gap: var(--sp-6);
+}
+
+.roadmap-step {
+  position: relative;
+  display: grid;
+  grid-template-columns: 40px 1fr;
+  gap: var(--sp-5);
+}
+
+.roadmap-step__marker {
+  display: flex;
+  justify-content: center;
+  padding-top: 6px;
+}
+
+.roadmap-step__dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--c-bg-navy);
+  border: 2px solid var(--c-accent);
+}
+
+.roadmap-step__card {
+  padding: var(--sp-5) var(--sp-6);
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: var(--r-md);
+}
+
+.roadmap-step__month {
+  font-size: var(--fs-caption);
+  letter-spacing: 0.14em;
+  color: var(--c-accent);
+}
+
+.roadmap-step__month-ja {
+  margin-left: var(--sp-3);
+  font-size: var(--fs-caption);
+  color: var(--c-text-on-navy-muted);
+}
+
+.roadmap-step__title {
+  margin: var(--sp-2) 0 var(--sp-4);
+  font-size: var(--fs-h3);
+}
+
+.roadmap-step__list {
+  display: grid;
+  gap: var(--sp-2);
+  font-size: var(--fs-small);
+  color: var(--c-text-on-navy-muted);
+}
+
+.roadmap-step__list li {
+  position: relative;
+  padding-left: 1.1em;
+}
+
+.roadmap-step__list li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.72em;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--c-accent);
+}
+
+.roadmap__cta {
+  margin-top: var(--sp-7);
+  text-align: center;
+}
+
+/* ============================================================
+   ⑦ 診断誘導バナー
+   ========================================================== */
+.checklist-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-6);
+  padding: clamp(1.75rem, 1.2rem + 2.4vw, 3rem);
+  background: linear-gradient(120deg, var(--c-accent-soft), var(--c-bg-elevated));
+  border: 1px solid var(--c-border);
+  border-radius: var(--r-lg);
+  transition: transform var(--dur-fast) var(--ease-out-soft),
+    box-shadow var(--dur-fast) var(--ease-out-soft);
+}
+
+.checklist-banner:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-md);
+}
+
+.checklist-banner__title {
+  font-size: var(--fs-h3);
+}
+
+.checklist-banner__body {
+  margin-top: var(--sp-3);
+  font-size: var(--fs-small);
+  color: var(--c-text-muted);
+}
+
+.checklist-banner__cta .btn {
+  pointer-events: none;
+}
+
+/* ============================================================
+   ⑧ 代表・チーム
+   ========================================================== */
+.team-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--sp-6);
+}
+
+.team-card {
+  text-align: center;
+}
+
+.team-card__photo {
+  position: relative;
+  aspect-ratio: 4 / 5;
+  border-radius: var(--r-md);
+  overflow: hidden;
+  background: linear-gradient(160deg, var(--c-slate-100), var(--c-slate-200));
+}
+
+.team-card__photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform var(--dur-slow) var(--ease-out-soft);
+}
+
+.team-card__photo.is-imgless img {
+  display: none;
+}
+
+.team-card:hover .team-card__photo img,
+.team-card:focus .team-card__photo img {
+  transform: scale(1.05);
+}
+
+.team-card__message {
+  position: absolute;
+  inset: auto 0 0 0;
+  padding: var(--sp-5) var(--sp-4);
+  font-family: var(--font-serif);
+  font-size: var(--fs-small);
+  line-height: 1.7;
+  color: #fff;
+  background: linear-gradient(180deg, rgba(16, 27, 49, 0) 0%, rgba(16, 27, 49, 0.86) 55%);
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity var(--dur-mid) var(--ease-out-soft),
+    transform var(--dur-mid) var(--ease-out-soft);
+}
+
+.team-card:hover .team-card__message,
+.team-card:focus .team-card__message,
+.team-card:focus-within .team-card__message {
+  opacity: 1;
+  transform: none;
+}
+
+.team-card__name {
+  margin-top: var(--sp-4);
+  font-family: var(--font-serif);
+  font-size: 1.05rem;
+}
+
+.team-card__role {
+  font-size: var(--fs-caption);
+  color: var(--c-text-muted);
+}
+
+/* ============================================================
+   ⑩ 最終CTA
+   ========================================================== */
+.final-cta {
+  position: relative;
+  padding-block: clamp(4rem, 3rem + 6vw, 8rem);
+  color: #fff;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.final-cta__bg {
+  position: absolute;
+  inset: -12% 0;
+  z-index: -1;
+  background: linear-gradient(150deg, #22344f, #12203a);
+}
+
+.final-cta__bg img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.4;
+}
+
+.final-cta__bg.is-imgless img {
+  display: none;
+}
+
+.final-cta__bg::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(16, 27, 49, 0.6);
+}
+
+.final-cta__inner {
+  max-width: 44ch;
+}
+
+.final-cta__title {
+  font-size: var(--fs-h2);
+  line-height: 1.4;
+}
+
+.final-cta__body {
+  margin-top: var(--sp-4);
+  color: rgba(255, 255, 255, 0.86);
+}
+
+.final-cta__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-4);
+  margin-top: var(--sp-6);
+}
+
+/* ============================================================
+   レスポンシブ
+   ========================================================== */
+@media (max-width: 960px) {
+  .issue-grid,
+  .reason-flow,
+  .pillar-grid,
+  .team-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .reason-step__connector {
+    display: none;
+  }
+}
+
+@media (max-width: 620px) {
+  .issue-grid,
+  .reason-flow,
+  .pillar-grid,
+  .team-grid {
+    grid-template-columns: 1fr;
+  }
+  .checklist-banner {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .hero__copy {
+    max-width: none;
+  }
+}

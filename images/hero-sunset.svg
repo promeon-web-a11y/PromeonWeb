@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1000" role="img" aria-label="夕陽をイメージしたメインビジュアル（差し替え用画像）">
+<defs>
+<linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+<stop offset="0" stop-color="#f7a24c"/>
+<stop offset="0.22" stop-color="#ef7f33"/>
+<stop offset="0.42" stop-color="#e8672a"/>
+<stop offset="0.62" stop-color="#c5506a"/>
+<stop offset="0.8" stop-color="#7a4a8f"/>
+<stop offset="1" stop-color="#1c3a5e"/>
+</linearGradient>
+<radialGradient id="sun" cx="0.62" cy="0.52" r="0.5">
+<stop offset="0" stop-color="#fff3df" stop-opacity="0.95"/>
+<stop offset="0.5" stop-color="#ffd9a3" stop-opacity="0.35"/>
+<stop offset="1" stop-color="#ffd9a3" stop-opacity="0"/>
+</radialGradient>
+</defs>
+<rect width="1600" height="1000" fill="url(#sky)"/>
+<rect width="1600" height="1000" fill="url(#sun)"/>
+<circle cx="992" cy="520" r="120" fill="#fff1da" opacity="0.9"/>
+<rect x="0" y="640" width="1600" height="360" fill="#16304d" opacity="0.32"/>
+<path d="M0 640 L1600 640" stroke="#ffffff" stroke-opacity="0.25" stroke-width="2"/>
+<g fill="#ffffff" opacity="0.14">
+<path d="M0 780 L360 720 L760 790 L1180 700 L1600 780 L1600 1000 L0 1000 Z"/>
+</g>
+<text x="800" y="930" text-anchor="middle" font-family="'Noto Sans JP',sans-serif" font-size="26" fill="#ffffff" opacity="0.6">夕陽をイメージした背景画像（写真素材は要確認）</text>
+</svg>

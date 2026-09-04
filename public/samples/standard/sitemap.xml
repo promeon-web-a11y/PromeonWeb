@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!-- 公開前に https://example.com/ を実際のドメインへ置き換えてください -->
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://example.com/</loc><changefreq>monthly</changefreq><priority>1.0</priority></url>
-  <url><loc>https://example.com/service.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://example.com/works.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://example.com/company.html</loc><changefreq>yearly</changefreq><priority>0.5</priority></url>
-  <url><loc>https://example.com/contact.html</loc><changefreq>yearly</changefreq><priority>0.6</priority></url>
-</urlset>

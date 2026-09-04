@@ -1,149 +1,442 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ja">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Promeon Web｜新しい火を灯し、未来を切り拓く｜中小企業・個人事業主のためのWeb制作</title>
+<meta name="description" content="Promeon Web は、中小企業・個人事業主向けにチャット中心でWebサイトを制作するサービスです。Mini・Standard・Pro の全プランにAIO/GEO対応を標準搭載し、分かりやすい料金でご提供します。ご相談・お見積りは無料です。">
+<meta name="theme-color" content="#1c3a5e">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="ja_JP">
+<meta property="og:title" content="Promeon Web｜新しい火を灯し、未来を切り拓く">
+<meta property="og:description" content="中小企業・個人事業主向けに、チャット中心でWebサイトを制作。AIO/GEO対応。ご相談・お見積りは無料です。">
+<meta property="og:image" content="images/ogp-placeholder.svg">
+<link rel="icon" href="images/favicon.png" type="image/png" sizes="any">
+<link rel="apple-touch-icon" href="images/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Noto+Serif+JP:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<!--
+  Promeon Web サイトサンプル（全7ページ：index / plans / samples / flow / faq / company / contact）
+  ・案件タイプ：信頼感重視型（BtoB・経営者向け）＋顧客要望の「キャッチコピー先行型」導入演出。
+  ・画像は images/ 内の「placeholder」入りSVGです（本番の写真・素材に差し替えてください）。
+  ・事実として扱っているのは、既存サイト（src/config.js・index.html）に記載のある範囲：
+    サービス名「Promeon Web」／チャット中心の制作／プラン名 Mini・Standard・Pro／
+    制作の流れ（相談→ヒアリング→制作→確認→修正・納品）／連絡先メール／公式LINE。
+  ・料金額・Proの「164,800円〜」・所在地・代表者名・沿革・設立年・電話番号・受付時間・
+    SNSの公開URL・夕陽グラデーションの中間色は、診断結果／見積りで確定できないため
+    「要確認」と明記、または仮の値・プレースホルダーにしています。
+  ・お問い合わせフォームは表示確認用サンプルで、送信処理はダミーです。
+  ・動き：FVはキャッチコピー先行型（縦書き・1文字ずつ時間差出現→CTA追従）／
+    スクロールは順次出現型（[data-stagger]＋IntersectionObserver）／
+    制作サンプルのプレビューは見え隠れ型／よくある質問はアコーディオン開閉／
+    ホバー色変化型はPC（@media hover）のみ。会社概要・お問い合わせは演出控えめ。
+-->
+</head>
+<body>
+<a class="skip-link" href="#main">本文へスキップ</a>
 
-    <title>チャットだけで、伝わるWebサイトを。｜中小企業向けWeb制作 Promeon Web</title>
-    <meta
-      name="description"
-      content="中小企業・個人事業主向けのホームページを分かりやすい料金で制作。打ち合わせから納品までチャット中心、Miniプラン49,800円（税込）から、スマホ対応。納期はご依頼内容により異なります。ご相談とお見積りは無料です。"
-    />
-
-    <link rel="canonical" href="https://promeon-web.vercel.app/" />
-
-    <link rel="icon" type="image/png" href="/favicon.png" sizes="any" />
-    <link rel="apple-touch-icon" href="/favicon.png" />
-
-    <meta property="og:type" content="website" />
-    <meta property="og:site_name" content="Promeon Web" />
-    <meta property="og:title" content="チャットだけで、伝わるWebサイトを。｜Promeon Web" />
-    <meta
-      property="og:description"
-      content="中小企業・個人事業主向けのホームページを、分かりやすい料金で。チャット中心・スマホ対応。納期は要相談。相談・見積り無料。"
-    />
-    <meta property="og:image" content="/og-image.svg" />
-    <meta property="og:url" content="https://promeon-web.vercel.app/" />
-    <meta name="twitter:card" content="summary_large_image" />
-
-    <link rel="stylesheet" href="/src/style.css" />
-    <script type="module" src="/src/main.js"></script>
-  </head>
-  <body>
-    <noscript>
-      <div style="padding: 24px; max-width: 720px; margin: 0 auto; font-family: sans-serif">
-        <h1>Promeon Web｜Webサイト制作サービス</h1>
-        <p>
-          中小企業・個人事業主向けに、チャット中心で依頼できるWebサイト制作サービスです。
-          基本プランは Mini（49,800円）・Standard（99,800円）・Pro（149,800円）（すべて税込）。
-          料金は内容により変動します。ご相談・お見積りは無料です。お問い合わせ：satokazu.promeon@gmail.com
-        </p>
-        <p>詳しい内容をご覧いただくには JavaScript を有効にしてください。</p>
+<header class="site-header" id="siteHeader">
+  <div class="container header-inner">
+    <a href="index.html" class="logo-area" aria-label="Promeon Web トップへ">
+      <img src="images/favicon.png" alt="" class="logo-mark" width="34" height="34">
+      <span class="logo-text">
+        <span class="logo-name">Promeon Web</span>
+        <span class="logo-sub">中小企業・個人事業主のためのWeb制作</span>
+      </span>
+    </a>
+    <nav class="header-nav" aria-label="メインメニュー">
+      <a href="index.html" class="header-nav-link" aria-current="page">TOP</a>
+      <a href="plans.html" class="header-nav-link">料金</a>
+      <a href="samples.html" class="header-nav-link">サンプル</a>
+      <a href="aio-geo.html" class="header-nav-link">AIO/GEO</a>
+      <a href="flow.html" class="header-nav-link">制作の流れ</a>
+      <a href="recruit-support.html" class="header-nav-link">採用支援</a>
+      <a href="faq.html" class="header-nav-link">よくある質問</a>
+      <a href="company.html" class="header-nav-link">会社概要</a>
+    </nav>
+    <div class="header-actions">
+      <a href="contact.html" class="btn btn-primary btn-sm header-cta">無料相談・無料見積り</a>
+      <button type="button" class="menu-btn" id="menuBtn" aria-label="メニューを開く" aria-expanded="false" aria-controls="siteNav">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+  <nav class="site-nav" id="siteNav" aria-label="メインメニュー">
+    <div class="site-nav-inner">
+      <p class="site-nav-heading">MENU</p>
+      <ul>
+        <li><a href="index.html" class="nav-link" aria-current="page">TOP<span>トップ</span></a></li>
+        <li><a href="plans.html" class="nav-link">PRICING<span>料金・プラン</span></a></li>
+        <li><a href="samples.html" class="nav-link">SAMPLES<span>制作サンプル</span></a></li>
+        <li><a href="aio-geo.html" class="nav-link">AIO / GEO<span>AIO/GEO対応について</span></a></li>
+        <li><a href="flow.html" class="nav-link">FLOW<span>制作の流れ</span></a></li>
+        <li><a href="recruit-support.html" class="nav-link">RECRUIT<span>採用支援</span></a></li>
+        <li><a href="faq.html" class="nav-link">FAQ<span>よくある質問</span></a></li>
+        <li><a href="company.html" class="nav-link">COMPANY<span>会社概要</span></a></li>
+        <li><a href="contact.html" class="nav-link">CONTACT<span>お問い合わせ</span></a></li>
+      </ul>
+      <div class="site-nav-foot">
+        <p>Promeon Web</p>
+        <p>お問い合わせ：<a href="mailto:satokazu.promeon@gmail.com">satokazu.promeon@gmail.com</a></p>
+        <p>ご相談・お見積りは無料です。</p>
       </div>
-    </noscript>
+    </div>
+  </nav>
+</header>
 
-    <div id="site-header"></div>
+<main id="main">
 
-    <main id="main">
-      <!-- ファーストビュー（左：文章／右：制作サイトのモックアップ） -->
-      <section id="hero" class="hero">
-        <div class="container hero-grid">
-          <div class="hero-text">
-            <h1 id="hero-heading">AIの速さと、人の丁寧さで。</h1>
-            <p id="hero-subcopy" class="hero-sub"></p>
-            <div class="hero-cta">
-              <a href="/contact/" class="btn btn-primary btn-lg">無料相談・無料見積り</a>
-              <a href="/samples/" class="btn btn-outline btn-lg">制作サンプルを見る</a>
-            </div>
-            <p class="hero-cta-note" data-cta-note></p>
-            <ul id="hero-badges" class="hero-badges"></ul>
-            <p id="hero-caption" class="hero-caption"></p>
+  <!-- ファーストビュー：キャッチコピー先行型（夕陽の全面背景＋縦書きキャッチ） -->
+  <section class="hero" id="hero">
+    <img src="images/hero.jpg" alt="" class="hero-bg" aria-hidden="true" fetchpriority="high" decoding="async">
+    <span class="hero-veil" aria-hidden="true"></span>
+    <div class="hero-inner">
+      <p class="hero-catch" aria-label="新しい火を灯し、未来を切り拓く">新しい火を灯し、未来を切り拓く</p>
+    </div>
+    <span class="hero-scroll" aria-hidden="true">SCROLL</span>
+  </section>
+
+  <div class="hero-strip">
+    <ul>
+      <li>チャット中心で相談・制作</li>
+      <li>Mini／Standard／Pro の3プラン</li>
+      <li>全プランでAIO/GEO対応を標準搭載</li>
+      <li>ご相談・お見積りは無料</li>
+    </ul>
+  </div>
+
+  <!-- サービスの世界観 -->
+  <section class="section">
+    <div class="container">
+      <div class="section-head section-head--center reveal">
+        <span class="section-kicker">ABOUT PROMEON WEB</span>
+        <h2 class="section-title">「伝わるかどうか」で、事業の見え方は変わる</h2>
+        <p class="section-lead">Promeon Web は、中小企業・個人事業主の方が、専門知識がなくても相談しやすいWeb制作サービスです。打ち合わせから確認・修正まで、やり取りはチャット中心。経営者の方の時間をなるべく取らずに、事業の魅力が伝わるサイトを形にします。</p>
+      </div>
+      <div class="points" data-stagger>
+        <div class="point-card reveal">
+          <h3>チャット中心で進む</h3>
+          <p>Web会議の予定調整は不要です。空いた時間にチャットとヒアリングシートでご回答いただき、そのまま制作を進めます。</p>
+        </div>
+        <div class="point-card reveal">
+          <h3>料金が分かりやすい</h3>
+          <p>Mini・Standard・Pro の3つの基本プランをご用意。制作内容によって料金は変わりますが、最初に内容と金額を確認してからご依頼いただけます。</p>
+        </div>
+        <div class="point-card reveal">
+          <h3>AIの速さと、人の確認</h3>
+          <p>下地づくりにはAIを活用し、内容と表示は人が確認します。速さと丁寧さの両立を目指しています。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 時代はSEOからAIO/GEOへ（新規セクション：段階的に出現） -->
+  <section class="section section--alt" id="aio">
+    <div class="container">
+      <div class="section-head section-head--center reveal">
+        <span class="section-kicker">SEO → AIO / GEO</span>
+        <h2 class="section-title">時代は「検索」から「AIに聞く」へ</h2>
+      </div>
+      <div class="aio-flow reveal" aria-hidden="true">
+        <span>検索エンジンで調べる</span>
+        <span class="arrow">→</span>
+        <span class="is-now">AIにたずねて答えを得る</span>
+      </div>
+      <div class="aio-lead" data-stagger>
+        <p class="reveal">これまで、情報を探す手段の中心は検索エンジンでした。ユーザーはキーワードを入力し、表示された一覧からサイトを選んでいました。</p>
+        <p class="reveal">いま、多くの人が<strong>生成AIに直接たずねて</strong>答えを受け取っています。このとき参照・引用されるかどうかで、事業の見つけられ方は大きく変わります。</p>
+        <p class="reveal">Promeon Web は、<strong>AIに見つけられ・引用されること（AIO／GEO）</strong>を前提にした構成・情報設計に取り組んでいます。Mini・Standard・Proのすべてのプランに標準で搭載しています。</p>
+      </div>
+      <div class="split reveal mt-32">
+        <div class="split-media">
+          <img src="images/aio-placeholder.svg" alt="検索する時代から、AIにたずねる時代への変化を表したイメージ図（差し替え用）" loading="lazy">
+        </div>
+        <div class="split-body">
+          <p class="subhead">AIO／GEO対応で取り組むこと</p>
+          <ul class="check-list">
+            <li>結論から書く、質問に答える形の文章構成</li>
+            <li>会社・サービスの事実情報（提供内容・対応範囲・連絡先）の整理と明記</li>
+            <li>構造化データなど、機械が読み取りやすいマークアップ<span class="flag-check">実装範囲は要確認</span></li>
+            <li>ページの表示速度とモバイル表示の最適化</li>
+          </ul>
+          <p><a href="aio-geo.html" class="btn btn-outline btn-sm">AIO/GEO対応について詳しく</a> <a href="plans.html" class="btn btn-outline btn-sm">Proプランの内容を見る</a></p>
+        </div>
+      </div>
+      <p class="inline-note reveal mt-16">※ AIO／GEOは新しい分野であり、効果を保証するものではありません。具体的な実装項目・範囲はお見積り時に確認します（要確認）。</p>
+    </div>
+  </section>
+
+  <!-- 料金プラン比較（3プランのカードがスタッガーで出現） -->
+  <section class="section" id="plans">
+    <div class="container">
+      <div class="section-head section-head--between reveal">
+        <div>
+          <span class="section-kicker">PRICING</span>
+          <h2 class="section-title">料金・プラン</h2>
+          <p class="section-lead">標準的な制作内容をまとめた3つの基本プランです。内容により料金は変動します（表示はすべて税込）。</p>
+        </div>
+        <a href="plans.html" class="btn btn-outline btn-sm">料金・プランを詳しく見る</a>
+      </div>
+      <div class="pricing" data-stagger>
+        <div class="plan reveal">
+          <span class="plan-badge">MINI</span>
+          <h3>Mini</h3>
+          <p class="plan-for">まず名刺代わりの1ページを持ちたい方へ</p>
+          <p class="plan-price"><span class="num">49,800</span><span class="yen">円</span><span class="from">〜</span></p>
+          <p class="plan-tax">税込・内容により変動</p>
+          <ul>
+            <li>1ページ構成（縦長LP型）</li>
+            <li>スマートフォン対応</li>
+            <li>お問い合わせ導線の設置</li>
+            <li>AIO/GEO対応を標準搭載</li>
+          </ul>
+          <a href="plans.html" class="btn btn-outline">詳細を見る</a>
+        </div>
+        <div class="plan reveal is-featured">
+          <span class="plan-badge">PRO ／ 今回のプラン</span>
+          <h3>Pro</h3>
+          <p class="plan-for">経営者・BtoB向けに、信頼感と発見性を重視する方へ</p>
+          <p class="plan-price"><span class="num">164,800</span><span class="yen">円</span><span class="from">〜</span></p>
+          <p class="plan-tax">税込・内容により変動<span class="flag-check">金額は要確認</span></p>
+          <ul>
+            <li>複数ページ構成（7ページ程度〜）</li>
+            <li>AIO/GEO対応を標準搭載</li>
+            <li>本格インタラクティブ演出（導入演出など）</li>
+            <li>ホバーのマイクロインタラクション強化</li>
+          </ul>
+          <a href="contact.html" class="btn btn-primary">このプランで相談する</a>
+        </div>
+        <div class="plan reveal">
+          <span class="plan-badge">STANDARD</span>
+          <h3>Standard</h3>
+          <p class="plan-for">数ページで会社・サービスを紹介したい方へ</p>
+          <p class="plan-price"><span class="num">99,800</span><span class="yen">円</span><span class="from">〜</span></p>
+          <p class="plan-tax">税込・内容により変動</p>
+          <ul>
+            <li>複数ページ構成（5ページ程度）</li>
+            <li>スマートフォン対応</li>
+            <li>スクロール連動の控えめな演出</li>
+            <li>AIO/GEO対応を標準搭載</li>
+          </ul>
+          <a href="plans.html" class="btn btn-outline">詳細を見る</a>
+        </div>
+      </div>
+      <p class="inline-note reveal mt-16">※ 料金は制作内容・ページ数・素材の準備状況により変動します。最新の料金・Proプランの「164,800円〜」の表記は要確認です。正式な金額はお見積りでご案内します。</p>
+    </div>
+  </section>
+
+  <!-- 制作サンプルのプレビュー（見え隠れ型） -->
+  <section class="section section--alt" id="samples">
+    <div class="container">
+      <div class="section-head section-head--between reveal">
+        <div>
+          <span class="section-kicker">SAMPLES</span>
+          <h2 class="section-title">制作サンプル</h2>
+          <p class="section-lead">各プランで作れるWebサイトのイメージです。すべてサービス紹介用の架空サンプルです。</p>
+        </div>
+        <a href="samples.html" class="btn btn-outline btn-sm">サンプルをすべて見る</a>
+      </div>
+      <div class="samples">
+        <article class="sample peek">
+          <div class="s-media"><img src="images/sample-kensetsu-placeholder.svg" alt="建設・工務店向けサイトの架空サンプル（差し替え用）" loading="lazy"></div>
+          <div class="s-body">
+            <span class="s-cat">建設・工務店</span>
+            <h3>地域の建設会社サイト（Pro想定）</h3>
+            <p>信頼感を軸に、施工事例・会社情報・採用までを1サイトに。導入演出とAIO/GEO対応を組み合わせた構成イメージです。</p>
+            <a class="s-link" href="samples.html">ページ内でプレビューを見る</a>
           </div>
-          <div
-            class="hero-media"
-            data-media="heroMockup|1600|1000|contain|eager"
-            data-media-alt="Promeon Web が制作したWebサイトのPC・スマートフォン表示"
-          ></div>
-        </div>
-      </section>
-
-      <!-- 顧客の悩み -->
-      <section id="pains" class="section">
-        <div class="container">
-          <div data-section-head="CHECK|こんなお悩みはありませんか？|"></div>
-          <ul id="home-pains" class="pain-grid"></ul>
-          <p id="home-pain-solution" class="pain-solution"></p>
-        </div>
-      </section>
-
-      <!-- 選ばれる理由（ナビ「サービス」のリンク先） -->
-      <section id="reasons" class="section">
-        <div class="container">
-          <div data-section-head="SERVICE|Promeon Webが選ばれる理由|チャット中心・明確な料金・AI活用の短納期・人による確認。"></div>
-          <ul id="home-reasons" class="reasons-grid"></ul>
-        </div>
-      </section>
-
-      <!-- 制作サンプル -->
-      <section id="samples-overview" class="section">
-        <div class="container">
-          <div data-section-head="SAMPLE|制作サンプル|各プランで作れるWebサイトのイメージです。すべてサービス紹介用の架空サンプルです。"></div>
-          <ul id="home-samples" class="card-grid samples-grid"></ul>
-          <p class="section-more">
-            <a href="/samples/" class="btn btn-outline">制作サンプルを詳しく見る</a>
-          </p>
-        </div>
-      </section>
-
-      <!-- 料金プラン（薄い暖色の背景で区切る） -->
-      <section id="plans-overview" class="section section-warm">
-        <div class="container">
-          <div data-section-head="PRICING|料金プラン|標準的な制作内容をまとめた基本プランです。内容により料金は変動します（すべて税込）。"></div>
-          <ul id="home-plans" class="pricing-grid"></ul>
-          <p class="section-more">
-            <a href="/plans/" class="btn btn-outline">料金・プランを詳しく見る</a>
-          </p>
-        </div>
-      </section>
-
-      <!-- AI活用の説明 -->
-      <section id="ai" class="section">
-        <div class="container">
-          <div data-section-head="AI &amp; HUMAN CHECK|AIの速さと、人の確認を組み合わせて制作します。|AIは下地づくりに活用し、内容と表示は人が確認します。"></div>
-          <div class="ai-layout">
-            <div
-              class="ai-media"
-              data-media="processDev|1200|800|cover"
-              data-media-alt="サイトを制作しているPC画面（AIを活用したコード制作）"
-            ></div>
-            <div id="home-ai" class="ai-wrap"></div>
+        </article>
+        <article class="sample peek">
+          <div class="s-media"><img src="images/sample-cafe-placeholder.svg" alt="カフェ・飲食店向けサイトの架空サンプル（差し替え用）" loading="lazy"></div>
+          <div class="s-body">
+            <span class="s-cat">カフェ・飲食店</span>
+            <h3>カフェの1ページサイト（Mini想定）</h3>
+            <p>メニュー・営業時間・地図・予約導線をまとめた、名刺代わりの縦長1ページ構成のイメージです。</p>
+            <a class="s-link" href="samples.html">ページ内でプレビューを見る</a>
           </div>
-        </div>
-      </section>
+        </article>
+        <article class="sample peek">
+          <div class="s-media"><img src="images/sample-clinic-placeholder.svg" alt="クリニック・歯科向けサイトの架空サンプル（差し替え用）" loading="lazy"></div>
+          <div class="s-body">
+            <span class="s-cat">クリニック・歯科</span>
+            <h3>クリニックの紹介サイト（Standard想定）</h3>
+            <p>診療案内・アクセス・よくある質問など、来院前に知りたい情報を数ページで整理した構成イメージです。</p>
+            <a class="s-link" href="samples.html">ページ内でプレビューを見る</a>
+          </div>
+        </article>
+        <article class="sample peek">
+          <div class="s-media"><img src="images/sample-cleaning-placeholder.svg" alt="清掃・ハウスクリーニング向けサイトの架空サンプル（差し替え用）" loading="lazy"></div>
+          <div class="s-body">
+            <span class="s-cat">清掃・ハウスクリーニング</span>
+            <h3>ハウスクリーニングのサイト（Standard想定）</h3>
+            <p>料金メニュー・対応エリア・作業の流れ・お問い合わせを分かりやすくまとめた構成イメージです。</p>
+            <a class="s-link" href="samples.html">ページ内でプレビューを見る</a>
+          </div>
+        </article>
+      </div>
+      <p class="inline-note mt-16">※ 掲載しているサイトはすべて、サービス内容をご説明するための架空サンプルです。実在の企業・店舗とは関係ありません。外部サイトへ遷移する前に、まずこのページ内・制作サンプルページでイメージをご確認いただけます。</p>
+    </div>
+  </section>
 
-      <!-- 制作の流れ（薄いグレーの背景で区切る） -->
-      <section id="flow-overview" class="section section-alt">
-        <div class="container">
-          <div data-section-head="FLOW|制作の流れ|チャットで相談 → ヒアリングシートに回答 → 制作 → 確認 → 修正・納品。Web会議は不要です。"></div>
-          <ol id="home-flow" class="flow-list flow-list--compact"></ol>
-          <p class="section-more">
-            <a href="/flow/" class="btn btn-outline">制作の流れを詳しく見る</a>
-          </p>
+  <!-- 採用支援事業（新規メニュー） -->
+  <section class="section section--warm" id="recruit">
+    <div class="container">
+      <div class="section-head section-head--between reveal">
+        <div>
+          <span class="section-kicker">RECRUIT SUPPORT</span>
+          <h2 class="section-title">採用でお困りの企業さまへ｜採用支援事業</h2>
+          <p class="section-lead">「求人を出しても応募が集まらない」「SNSでの発信が続かない」といった採用課題を解決する専門サービスです。建築業・警備業に特化し、求人文章の作成から採用SNSの運用設計まで対応します。</p>
         </div>
-      </section>
-
-      <!-- よくある質問（薄い暖色の背景で区切る） -->
-      <section id="faq-overview" class="section section-warm">
-        <div class="container">
-          <div data-section-head="FAQ|よくある質問|初めての方から多くいただく質問です。"></div>
-          <dl id="home-faq" class="faq-list"></dl>
-          <p class="section-more">
-            <a href="/faq/" class="btn btn-outline">よくある質問をすべて見る</a>
-          </p>
+        <a href="recruit-support.html" class="btn btn-outline btn-sm">採用支援ページを見る</a>
+      </div>
+      <div class="points" data-stagger>
+        <div class="point-card reveal">
+          <h3>求人文章・採用導線</h3>
+          <p>職種ごとの求人原稿作成と、LINE自動応答などの応募動線づくり。とりこぼしを減らします。</p>
         </div>
-      </section>
-    </main>
+        <div class="point-card reveal">
+          <h3>採用ページ改善</h3>
+          <p>いまお使いのサイトの採用ページを、応募率の観点で診断・改善します。</p>
+        </div>
+        <div class="point-card reveal">
+          <h3>採用SNS運用設計</h3>
+          <p>台本作成・分析・戦略設計・リスク対策・DM対応・撮影スケジュールまで一括で設計・支援します。</p>
+        </div>
+      </div>
+      <p class="text-center mt-32 reveal"><a href="recruit-support.html" class="btn btn-primary">採用支援の内容・料金を見る</a></p>
+    </div>
+  </section>
 
-    <div id="site-footer"></div>
-  </body>
+  <!-- 制作の流れ（5ステップ順次出現） -->
+  <section class="section" id="flow">
+    <div class="container">
+      <div class="section-head section-head--center reveal">
+        <span class="section-kicker">FLOW</span>
+        <h2 class="section-title">ご相談から納品まで、5ステップ</h2>
+        <p class="section-lead">Web会議は不要です。チャットとヒアリングシートのやり取りで進みます。</p>
+      </div>
+      <ol class="flow" data-stagger>
+        <li class="reveal">
+          <h3>1. チャットで相談</h3>
+          <p>お問い合わせフォームまたは公式LINEから、作りたいサイトのイメージ・ご予算感をお知らせください。ご相談・お見積りは無料です。</p>
+        </li>
+        <li class="reveal">
+          <h3>2. ヒアリングシートに回答</h3>
+          <p>お送りするヒアリングシートに、事業内容・掲載したい情報・写真素材などをご記入いただきます。</p>
+        </li>
+        <li class="reveal">
+          <h3>3. 制作</h3>
+          <p>いただいた内容をもとに、AIを活用して下地をつくり、人が内容と表示を整えて制作します。</p>
+        </li>
+        <li class="reveal">
+          <h3>4. 確認</h3>
+          <p>プレビュー用のURLをお渡しします。文章・写真・レイアウトをご確認ください。</p>
+        </li>
+        <li class="reveal">
+          <h3>5. 修正・納品</h3>
+          <p>ご要望をふまえて修正し、問題がなければ公開・納品します。<span class="step-meta">修正回数・納期の目安は制作内容により異なります（要確認）。</span></p>
+        </li>
+      </ol>
+      <p class="text-center mt-32"><a href="flow.html" class="btn btn-outline">制作の流れを詳しく見る</a></p>
+    </div>
+  </section>
+
+  <!-- よくある質問（アコーディオン） -->
+  <section class="section section--warm" id="faq">
+    <div class="container">
+      <div class="section-head section-head--center reveal">
+        <span class="section-kicker">FAQ</span>
+        <h2 class="section-title">よくある質問</h2>
+        <p class="section-lead">はじめての方から多くいただく質問を抜粋しています。</p>
+      </div>
+      <div class="faq-list">
+        <div class="faq-item reveal">
+          <button type="button" class="faq-q" aria-expanded="false">AIで作ると聞くと少し不安です。品質は大丈夫ですか？</button>
+          <div class="faq-a"><div class="faq-a-inner"><div>AIは文章や構成の下地づくりに活用し、最終的な内容・表現・表示の確認は人が行います。公開前にプレビューURLでご確認いただき、修正のうえ納品します。</div></div></div>
+        </div>
+        <div class="faq-item reveal">
+          <button type="button" class="faq-q" aria-expanded="false">打ち合わせはチャットだけですか？電話や対面はできますか？</button>
+          <div class="faq-a"><div class="faq-a-inner"><div>基本はチャットとヒアリングシートで進めます。これにより日程調整の手間を減らしています。電話・オンライン面談などのご希望は、お問い合わせ時にご相談ください（対応可否は要確認）。</div></div></div>
+        </div>
+        <div class="faq-item reveal">
+          <button type="button" class="faq-q" aria-expanded="false">AIO/GEO対応をすると、必ずAIに表示されますか？</button>
+          <div class="faq-a"><div class="faq-a-inner"><div>いいえ。AIO/GEOは新しい分野であり、特定のAIサービスでの表示や引用を保証するものではありません。AIが読み取りやすい構成・情報整理・表示速度の最適化などに取り組む対応です。</div></div></div>
+        </div>
+        <div class="faq-item reveal">
+          <button type="button" class="faq-q" aria-expanded="false">納品後の修正や更新はお願いできますか？</button>
+          <div class="faq-a"><div class="faq-a-inner"><div>対応可能です。修正・更新の範囲や費用はプランやご契約内容によって異なります。詳細はお見積り時にご案内します（要確認）。</div></div></div>
+        </div>
+      </div>
+      <p class="text-center mt-32"><a href="faq.html" class="btn btn-outline">よくある質問をすべて見る</a></p>
+    </div>
+  </section>
+
+  <section class="cta-band">
+    <div class="container reveal">
+      <h2>まずはお気軽にご相談ください</h2>
+      <p>「どのプランが合うか分からない」「予算内でどこまでできるか知りたい」といった段階でも大丈夫です。ご相談・お見積りは無料です。</p>
+      <div class="btn-row">
+        <a href="contact.html" class="btn btn-outline-light btn-lg">お問い合わせフォーム</a>
+        <a href="plans.html" class="btn btn-ghost btn-lg">料金・プランを見る</a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <p class="f-name">Promeon Web</p>
+        <p class="f-catch">新しい火を灯し、未来を切り拓く</p>
+        <p>中小企業・個人事業主向けに、チャット中心でWebサイトを制作するサービスです。<br>お問い合わせ：<a href="mailto:satokazu.promeon@gmail.com" style="color:#fff;">satokazu.promeon@gmail.com</a><br>公式LINE：<a href="https://lin.ee/onG5cTt" style="color:#fff;">友だち追加はこちら</a><br>Instagram：<a href="https://www.instagram.com/PromeonWeb/" style="color:#fff;">@PromeonWeb</a>／Facebook：<a href="https://www.facebook.com/profile.php?id=61594058514921" style="color:#fff;">ページ</a></p>
+        <p>所在地・受付時間：要確認</p>
+      </div>
+      <div class="footer-col">
+        <h3>サービス</h3>
+        <ul>
+          <li><a href="plans.html">料金・プラン</a></li>
+          <li><a href="samples.html">制作サンプル</a></li>
+          <li><a href="aio-geo.html">AIO/GEO対応について</a></li>
+          <li><a href="flow.html">制作の流れ</a></li>
+          <li><a href="recruit-support.html">採用支援</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h3>会社・ご相談</h3>
+        <ul>
+          <li><a href="faq.html">よくある質問</a></li>
+          <li><a href="company.html">会社概要</a></li>
+          <li><a href="contact.html">お問い合わせ</a></li>
+        </ul>
+      </div>
+    </div>
+    <nav class="footer-nav" aria-label="フッターメニュー">
+      <a href="index.html">TOP</a>
+      <a href="plans.html">料金・プラン</a>
+      <a href="samples.html">制作サンプル</a>
+      <a href="aio-geo.html">AIO/GEO対応について</a>
+      <a href="flow.html">制作の流れ</a>
+      <a href="recruit-support.html">採用支援</a>
+      <a href="faq.html">よくある質問</a>
+      <a href="company.html">会社概要</a>
+      <a href="contact.html">お問い合わせ</a>
+    </nav>
+    <div class="footer-bottom">
+      <span>Promeon Web／中小企業・個人事業主のためのWeb制作サービス</span>
+      <span>&copy; <span id="copyYear">2026</span> Promeon Web</span>
+    </div>
+  </div>
+</footer>
+
+<div class="mobile-cta">
+  <a href="contact.html" class="mc-contact">無料相談・無料見積り</a>
+  <a href="plans.html" class="mc-plans">料金</a>
+</div>
+
+<script src="js/script.js"></script>
+</body>
 </html>

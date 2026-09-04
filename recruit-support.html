@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>採用支援（RECRUIT BRIDGE）｜Promeon Web</title>
+<meta name="description" content="Promeon Web の採用支援サービス「RECRUIT BRIDGE」。AIとSNSトレンド分析で、建築業・警備業の採用を3ヶ月で立て直します。応募が来ない・辞退が多い・すぐ辞める、といった業界特有の課題に伴走します。">
+<meta name="theme-color" content="#1c3a5e">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="ja_JP">
+<meta property="og:title" content="採用支援（RECRUIT BRIDGE）｜Promeon Web">
+<meta property="og:description" content="AIとSNSトレンド分析で、建築業・警備業の採用を3ヶ月で立て直す採用支援サービス。">
+<meta property="og:image" content="images/ogp-placeholder.svg">
+<link rel="icon" href="images/favicon.png" type="image/png" sizes="any">
+<link rel="apple-touch-icon" href="images/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Noto+Serif+JP:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<!-- Promeon Web サイトサンプル／採用支援ページ。
+     採用支援（採用支援事業「RECRUIT BRIDGE」／建築業・警備業特化）の全内容を
+     このページ1本に統合。他ページへ誘導せず、サービス内容・料金の確認から
+     お問い合わせまでこのページで完結する構成。代表者プロフィール等は掲載しない。
+     サービス項目：求人文章作成／採用導線設計／既存サイト採用ページ改善／
+     採用SNS運用設計（＝旧「採用SNS運用支援」を6項目に具体化：台本作成・分析・
+     戦略設計・ネットリテラシー対策・DM/チャット対応・撮影/投稿スケジュール設計）。
+     文章・数値は recruit-support/src/config.js ベースのサンプル。料金は暫定、
+     連絡先・実績・成果・SNS運用設計追加時の料金見直しは要確認。
+     ※旧 Vite プロジェクト promeon-web/recruit-support/ は本統合により未使用。 -->
+</head>
+<body>
+<a class="skip-link" href="#main">本文へスキップ</a>
+
+<header class="site-header" id="siteHeader">
+  <div class="container header-inner">
+    <a href="index.html" class="logo-area" aria-label="Promeon Web トップへ">
+      <img src="images/favicon.png" alt="" class="logo-mark" width="34" height="34">
+      <span class="logo-text">
+        <span class="logo-name">Promeon Web</span>
+        <span class="logo-sub">中小企業・個人事業主のためのWeb制作</span>
+      </span>
+    </a>
+    <nav class="header-nav" aria-label="メインメニュー">
+      <a href="index.html" class="header-nav-link">TOP</a>
+      <a href="plans.html" class="header-nav-link">料金</a>
+      <a href="samples.html" class="header-nav-link">サンプル</a>
+      <a href="aio-geo.html" class="header-nav-link">AIO/GEO</a>
+      <a href="flow.html" class="header-nav-link">制作の流れ</a>
+      <a href="recruit-support.html" class="header-nav-link" aria-current="page">採用支援</a>
+      <a href="faq.html" class="header-nav-link">よくある質問</a>
+      <a href="company.html" class="header-nav-link">会社概要</a>
+    </nav>
+    <div class="header-actions">
+      <a href="contact.html" class="btn btn-primary btn-sm header-cta">無料相談・無料見積り</a>
+      <button type="button" class="menu-btn" id="menuBtn" aria-label="メニューを開く" aria-expanded="false" aria-controls="siteNav">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+  <nav class="site-nav" id="siteNav" aria-label="メインメニュー">
+    <div class="site-nav-inner">
+      <p class="site-nav-heading">MENU</p>
+      <ul>
+        <li><a href="index.html" class="nav-link">TOP<span>トップ</span></a></li>
+        <li><a href="plans.html" class="nav-link">PRICING<span>料金・プラン</span></a></li>
+        <li><a href="samples.html" class="nav-link">SAMPLES<span>制作サンプル</span></a></li>
+        <li><a href="aio-geo.html" class="nav-link">AIO / GEO<span>AIO/GEO対応について</span></a></li>
+        <li><a href="flow.html" class="nav-link">FLOW<span>制作の流れ</span></a></li>
+        <li><a href="recruit-support.html" class="nav-link" aria-current="page">RECRUIT<span>採用支援</span></a></li>
+        <li><a href="faq.html" class="nav-link">FAQ<span>よくある質問</span></a></li>
+        <li><a href="company.html" class="nav-link">COMPANY<span>会社概要</span></a></li>
+        <li><a href="contact.html" class="nav-link">CONTACT<span>お問い合わせ</span></a></li>
+      </ul>
+      <div class="site-nav-foot">
+        <p>Promeon Web</p>
+        <p>お問い合わせ：<a href="mailto:satokazu.promeon@gmail.com">satokazu.promeon@gmail.com</a></p>
+        <p>ご相談・お見積りは無料です。</p>
+      </div>
+    </div>
+  </nav>
+</header>
+
+<main id="main">
+  <section class="page-hero">
+    <img src="images/page-hero-placeholder.svg" alt="" class="page-hero-img" aria-hidden="true">
+    <div class="page-hero-inner">
+      <p class="page-hero-kicker">RECRUIT SUPPORT ／ RECRUIT BRIDGE</p>
+      <h1>採用支援</h1>
+      <p>AIとSNSトレンド分析で、建築業・警備業の採用を最速で立て直す。「3ヶ月で、“辞めない採用”へ。」を掲げる採用支援サービスです。</p>
+    </div>
+  </section>
+  <nav class="breadcrumb" aria-label="パンくずリスト">
+    <ol>
+      <li><a href="index.html">TOP</a></li>
+      <li aria-current="page">採用支援</li>
+    </ol>
+  </nav>
+
+  <section class="section">
+    <div class="container">
+      <div class="section-head section-head--center reveal">
+        <span class="section-kicker">ABOUT</span>
+        <h2 class="section-title">Web制作の先にある「採用」まで、伴走します</h2>
+        <p class="section-lead">サイトを整えても、応募や定着の課題は残ります。Promeon Web の採用支援は、建築業・警備業に特化し、AIによる求人原稿・分析の高速化と、SNSトレンドの常時モニタリングで、90日単位で採用を立て直すサービスです。このページだけで、サービス内容・料金の確認からお問い合わせまで完結できます。</p>
+      </div>
+      <div class="text-center reveal">
+        <a href="#service" class="btn btn-outline btn-sm">サービス内容へ</a>
+        <a href="#price" class="btn btn-outline btn-sm">料金の目安へ</a>
+        <a href="contact.html" class="btn btn-primary btn-sm">相談する</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--alt">
+    <div class="container">
+      <div class="section-head section-head--center reveal">
+        <span class="section-kicker">ISSUES</span>
+        <h2 class="section-title">その採用のもやもや、業界特有の構造が原因です</h2>
+        <p class="section-lead">建築業・警備業の現場では、他業種と同じやり方が通用しません。よくある行き詰まりです。</p>
+      </div>
+      <div class="points" data-stagger>
+        <div class="point-card reveal">
+          <h3>そもそも応募が来ない</h3>
+          <p>媒体に載せても反応がなく、掲載費だけが積み上がっていく。母集団が形成できない。</p>
+        </div>
+        <div class="point-card reveal">
+          <h3>内定辞退が多い</h3>
+          <p>面接までは進むのに、他社と比較され条件面で競り負ける。連絡の速度でも後手に回る。</p>
+        </div>
+        <div class="point-card reveal">
+          <h3>入社してもすぐ辞める</h3>
+          <p>入社前の説明と現場のギャップ。オンボーディングが属人的で、3ヶ月以内の離職が止まらない。</p>
+        </div>
+        <div class="point-card reveal">
+          <h3>求人媒体を使いこなせない</h3>
+          <p>どの媒体に・どんな原稿で・いくら張るべきか判断できず、代理店任せで費用対効果が見えない。</p>
+        </div>
+        <div class="point-card reveal">
+          <h3>SNS運用のリソースがない</h3>
+          <p>現場が忙しく発信は後回し。アカウントはあるが更新が止まり、企業の雰囲気が伝わらない。</p>
+        </div>
+        <div class="point-card reveal">
+          <h3>採用の打ち手が場当たり的</h3>
+          <p>毎年ゼロから手探り。何が効いて何が無駄だったのか、社内に知見が残らない。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="section-head section-head--center reveal">
+        <span class="section-kicker">WHY 3 MONTHS</span>
+        <h2 class="section-title">なぜ、3ヶ月で結果が出せるのか</h2>
+        <p class="section-lead">実績の数ではなく、再現性のある「仕組み」で説明します。</p>
+      </div>
+      <div class="points" data-stagger>
+        <div class="point-card reveal">
+          <h3>AIで媒体・原稿を最短で最適化</h3>
+          <p>求人原稿のA/B案生成、ターゲット別の訴求出し分け、応募データの分析までをAIで高速に回し、勘に頼らず改善します。</p>
+        </div>
+        <div class="point-card reveal">
+          <h3>SNSトレンドを常時モニタリング</h3>
+          <p>業界の話題や伸びている投稿フォーマットを毎週ウォッチし、波が来たタイミングを逃さず発信に反映します。</p>
+        </div>
+        <div class="point-card reveal">
+          <h3>現場理解に基づく設計</h3>
+          <p>建築・警備の就業実態（シフト・資格・繁忙期）を前提に、応募〜定着までの導線を組み直します。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--alt" id="service">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="section-kicker">SERVICE</span>
+        <h2 class="section-title">サービス内容</h2>
+        <p class="section-lead">必要な範囲だけの部分支援から、採用全体の伴走まで対応します。1つのサービス単位でのご依頼も可能です。</p>
+      </div>
+      <div class="grid grid-2" data-stagger style="align-items:start;">
+        <div class="point-card reveal">
+          <h3>求人文章作成</h3>
+          <p>職種ごとの求人原稿を作成します。訴求軸の設計から複数案の作成・改善まで対応。AIで案出しを高速化し、現場ヒアリングで磨き込みます。</p>
+        </div>
+        <div class="point-card reveal">
+          <h3>採用導線設計</h3>
+          <p>LINE自動応答など、応募につながる動線を設計・構築します。応募のとりこぼしを減らし、初回連絡までの速度を上げます。</p>
+        </div>
+        <div class="point-card reveal">
+          <h3>既存サイト採用ページ改善</h3>
+          <p>いまお使いのサイトの採用ページを診断し、応募率の観点で改善します。情報設計・導線・スマホ表示を中心に手を入れます。</p>
+        </div>
+        <div class="point-card reveal">
+          <h3>採用SNS運用設計（SNS運用支援）</h3>
+          <p>採用に強いSNSアカウントを、企画から日々の運用まで一括で設計・支援します。</p>
+          <ul class="check-list" style="margin:12px 0 0;">
+            <li>台本作成（ショート動画・投稿用の構成台本）</li>
+            <li>分析（投稿ごとの反応・アカウント全体の数値分析、改善提案）</li>
+            <li>戦略設計（発信テーマ・ターゲット・トーン&amp;マナーの設計）</li>
+            <li>ネットリテラシー対策（炎上・誹謗中傷・個人情報流出などのリスク対策）</li>
+            <li>DM・チャット対応（応募者・フォロワーからの問い合わせ対応設計／代行）</li>
+            <li>撮影・投稿スケジュール設計（月間の撮影日・投稿日カレンダー作成）</li>
+          </ul>
+        </div>
+      </div>
+      <p class="inline-note reveal mt-16">※ 「採用SNS運用設計」は、従来の「採用SNS運用支援」プランの提供内容を6項目として具体化・明文化したものです。項目追加にともなう料金の見直しは要確認です。</p>
+    </div>
+  </section>
+
+  <section class="section" id="price">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="section-kicker">PRICE</span>
+        <h2 class="section-title">料金の目安</h2>
+        <p class="section-lead">単体でのご依頼、組み合わせのどちらも対応します。金額は暫定です（掲載前に最終確認）。</p>
+      </div>
+      <div class="reveal">
+        <table class="compare-table">
+          <caption>下記は既存メモを基にした暫定の目安です。正式な金額はお見積りでご案内します（要確認）。</caption>
+          <thead>
+            <tr><th scope="col">サービス</th><th scope="col">内容</th><th scope="col">料金目安</th></tr>
+          </thead>
+          <tbody>
+            <tr><th scope="row">求人文章作成</th><td>職種ごとの求人原稿作成</td><td>3〜5万円／職種（追加職種 +1.5万円）</td></tr>
+            <tr><th scope="row">採用導線設計</th><td>LINE自動応答など応募動線の構築</td><td>診断2万円＋構築3〜4万円</td></tr>
+            <tr><th scope="row">既存サイト採用ページ改善</th><td>既存サイトの採用ページを改善</td><td>診断 無料〜5千円＋実制作5〜8万円</td></tr>
+            <tr><th scope="row">採用SNS運用設計・運用支援</th><td>台本／分析／戦略設計／ネットリテラシー対策／DM・チャット対応／撮影・投稿スケジュール設計</td><td>月4投稿からスタート／月3万円〜</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="inline-note reveal mt-16">※ 料金・提供範囲・実績・連絡先はいずれも要確認です。期間やレスポンスの目安はサービス設計上の目標値で、成果を保証するものではありません。</p>
+    </div>
+  </section>
+
+  <section class="cta-band">
+    <div class="container reveal">
+      <h2>採用の相談も、Webサイトと一緒に</h2>
+      <p>「採用サイトとSNSをまとめて見直したい」「まず現状を診断してほしい」など、入口の段階でかまいません。ご相談は無料です。</p>
+      <div class="btn-row">
+        <a href="contact.html" class="btn btn-outline-light btn-lg">お問い合わせフォーム</a>
+        <a href="plans.html#recruit" class="btn btn-ghost btn-lg">料金ページで見る</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <p class="f-name">Promeon Web</p>
+        <p class="f-catch">新しい火を灯し、未来を切り拓く</p>
+        <p>中小企業・個人事業主向けに、チャット中心でWebサイトを制作するサービスです。<br>お問い合わせ：<a href="mailto:satokazu.promeon@gmail.com" style="color:#fff;">satokazu.promeon@gmail.com</a><br>公式LINE：<a href="https://lin.ee/onG5cTt" style="color:#fff;">友だち追加はこちら</a><br>Instagram：<a href="https://www.instagram.com/PromeonWeb/" style="color:#fff;">@PromeonWeb</a>／Facebook：<a href="https://www.facebook.com/profile.php?id=61594058514921" style="color:#fff;">ページ</a></p>
+        <p>所在地・受付時間：要確認</p>
+      </div>
+      <div class="footer-col">
+        <h3>サービス</h3>
+        <ul>
+          <li><a href="plans.html">料金・プラン</a></li>
+          <li><a href="samples.html">制作サンプル</a></li>
+          <li><a href="aio-geo.html">AIO/GEO対応について</a></li>
+          <li><a href="flow.html">制作の流れ</a></li>
+          <li><a href="recruit-support.html">採用支援</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h3>会社・ご相談</h3>
+        <ul>
+          <li><a href="faq.html">よくある質問</a></li>
+          <li><a href="company.html">会社概要</a></li>
+          <li><a href="contact.html">お問い合わせ</a></li>
+        </ul>
+      </div>
+    </div>
+    <nav class="footer-nav" aria-label="フッターメニュー">
+      <a href="index.html">TOP</a>
+      <a href="plans.html">料金・プラン</a>
+      <a href="samples.html">制作サンプル</a>
+      <a href="aio-geo.html">AIO/GEO対応について</a>
+      <a href="flow.html">制作の流れ</a>
+      <a href="recruit-support.html">採用支援</a>
+      <a href="faq.html">よくある質問</a>
+      <a href="company.html">会社概要</a>
+      <a href="contact.html">お問い合わせ</a>
+    </nav>
+    <div class="footer-bottom">
+      <span>Promeon Web／中小企業・個人事業主のためのWeb制作サービス</span>
+      <span>&copy; <span id="copyYear">2026</span> Promeon Web</span>
+    </div>
+  </div>
+</footer>
+
+<div class="mobile-cta">
+  <a href="contact.html" class="mc-contact">無料相談・無料見積り</a>
+  <a href="plans.html" class="mc-plans">料金</a>
+</div>
+
+<script src="js/script.js"></script>
+</body>
+</html>
