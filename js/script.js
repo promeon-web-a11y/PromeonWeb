@@ -4,7 +4,7 @@
    - スクロール連動フェードイン（順次出現型 / [data-stagger] / prefers-reduced-motion 配慮）
    - 制作サンプルの「見え隠れ型」表示（双方向トグル）
    - よくある質問のアコーディオン開閉（高さトランジション）
-   - お問い合わせフォームの送信（FormSubmit 通常送信・非AJAX／_next 書き換え＋完了表示＋二重送信防止）
+   - お問い合わせフォームの送信処理は一時的に無効化（FormSubmit 認証のため最小構成／通常の HTML POST のみ）
    - ヘッダーの影付与（スクロール時） / フッター年号の自動表示 */
 (function () {
   'use strict';
@@ -138,68 +138,15 @@
     });
   });
 
-  /* ---------- お問い合わせフォーム（FormSubmit 通常送信 / 非AJAX） ----------
-     form[action] = https://formsubmit.co/satokazu.promeon@gmail.com へ通常の POST 送信。
-     送信後 FormSubmit は _next の URL へリダイレクトで戻す。ここでは
-       ・ハニーポット（_honey）が埋まっていれば送信を中止
-       ・_next を「実際に配信されているオリジン + ?sent=1」に書き換え
-         （本番ドメインが変わっても戻り先が一致するように）
-       ・二重送信防止として送信ボタンを無効化（連打・多重送信を防ぐ）
-     だけを行い、あとはブラウザの通常送信に任せる（preventDefault しない／fetch も使わない）。
-     戻ってきたページ（?sent=1）で完了メッセージを表示する。
-     ブラウザの戻る操作でページが復元されたときは、ボタンを押せる状態に戻す。 */
-  var form = document.getElementById('contactForm');
-  if (form) {
-    var status = document.getElementById('formStatus');
-    var submitBtn = form.querySelector('button[type="submit"]');
-    var submitting = false;
-
-    function showFormStatus(ok, msg) {
-      if (!status) return;
-      status.className = 'form-status is-show ' + (ok ? 'is-ok' : 'is-ng');
-      status.textContent = msg;
-      status.setAttribute('tabindex', '-1');
-      try { status.scrollIntoView({ block: 'center' }); } catch (err) {}
-      status.focus();
-    }
-
-    function unlockSubmit() {
-      submitting = false;
-      if (submitBtn) { submitBtn.disabled = false; submitBtn.removeAttribute('aria-busy'); }
-    }
-
-    form.addEventListener('submit', function (e) {
-      // ハニーポット：bot が埋めていたら送信しない
-      var honey = form.querySelector('[name="_honey"]');
-      if (honey && honey.value) { e.preventDefault(); return; }
-
-      // すでに送信処理中なら連打を無視
-      if (submitting) { e.preventDefault(); return; }
-      submitting = true;
-
-      // 戻り先（_next）を実際のオリジンに合わせる
-      var next = form.querySelector('[name="_next"]');
-      if (next) {
-        next.value = window.location.origin + window.location.pathname + '?sent=1';
-      }
-
-      // 二重送信防止（通常送信はそのまま実行する）
-      if (submitBtn) { submitBtn.disabled = true; submitBtn.setAttribute('aria-busy', 'true'); }
-    });
-
-    // 戻る操作でキャッシュから復元された場合は、無効化した送信ボタンを戻す
-    window.addEventListener('pageshow', function (e) {
-      if (e.persisted) unlockSubmit();
-    });
-
-    // FormSubmit から ?sent=1 付きで戻ってきたら完了メッセージを表示し、URL を元に戻す
-    if (/[?&]sent=1(?:&|$)/.test(window.location.search)) {
-      showFormStatus(true, 'お問い合わせありがとうございます。送信が完了しました。内容を確認のうえ、担当者よりご返信いたします。');
-      if (window.history && window.history.replaceState) {
-        window.history.replaceState(null, '', window.location.pathname);
-      }
-    }
-  }
+  /* ---------- お問い合わせフォーム（一時的に JavaScript 処理を無効化） ----------
+     FormSubmit の初回認証メールを確実に受け取るため、フォームは最小構成にしている。
+     いまは通常の HTML フォーム POST のみで送信する構成のため、以下は一時的に外した:
+       ・ハニーポット（_honey）の JS チェック
+       ・_next の書き換え（_next 自体を contact.html から削除済み）
+       ・二重送信防止（送信ボタンの無効化）
+       ・?sent=1 で戻ってきたときの独自の送信完了メッセージ表示
+     送信後は FormSubmit 標準の Thank You ページへ遷移する。
+     認証完了後に、これらの処理は必要に応じて戻す。 */
 
   /* ---------- ヘッダーの影（スクロール時） ---------- */
   var header = document.querySelector('.site-header');

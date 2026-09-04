@@ -17,12 +17,13 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Noto+Serif+JP:wght@500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/style.css">
-<!-- Promeon Web お問い合わせページ。フォームは FormSubmit の通常送信（非AJAX）で POST する。
-     送信先: https://formsubmit.co/satokazu.promeon@gmail.com（APIキー・サーバー関数不要）。
-     ↑ FormSubmit の正式な初回接続方式（メールアドレス直指定）。初回送信時に FormSubmit から
-       「Activate Form」確認メールが届くので、そのリンクを一度クリックすると以後メールが配信される。
-     送信後は _next（js/script.js が現在のオリジン + ?sent=1 に書き換え）へ戻り、完了メッセージを表示。
-     honeypot は _honey。送信処理の残り（_next 書き換え・完了表示）は js/script.js の #contactForm 部分。
+<!-- Promeon Web お問い合わせページ。フォームは FormSubmit の最小構成（通常の HTML フォーム POST のみ）。
+     送信先: https://formsubmit.co/satokazu.promeon@gmail.com（メールアドレス直指定・APIキー/サーバー関数不要）。
+     ↑ FormSubmit の正式な初回接続方式。初回送信時に FormSubmit から「Activate Form」確認メールが届くので、
+       そのリンクを一度クリックすると以後メールが配信される。この段階ではランダムエイリアスへは変更しない。
+     一時的にすべて外している: ランダムエイリアス / /ajax/ 送信 / JavaScript(fetch)送信 / 独自AJAX /
+       _next による戻り先指定 / 独自の送信完了表示（js/script.js の #contactForm 部分）。
+     送信後は FormSubmit 標準の Thank You ページへ遷移する。honeypot は _honey、_captcha は標準（有効）。
      電話番号・受付時間は要確認のため掲載せず、メール・フォーム・公式LINEのみ案内。動きは控えめ（main.quiet）。 -->
 </head>
 <body>
@@ -99,11 +100,10 @@
         <div class="split-body">
           <div class="form-wrap">
             <form id="contactForm" action="https://formsubmit.co/satokazu.promeon@gmail.com" method="POST">
-              <input type="text" name="_honey" class="hp-field" tabindex="-1" autocomplete="off" aria-hidden="true">
+              <input type="text" name="_honey" style="display:none">
               <input type="hidden" name="_subject" value="お問い合わせ（Promeon Web）">
               <input type="hidden" name="_template" value="table">
-              <input type="hidden" name="_captcha" value="false">
-              <input type="hidden" name="_next" value="https://promeon-web-w5n1.vercel.app/contact.html?sent=1">
+              <input type="hidden" name="_captcha" value="true">
               <div class="field">
                 <label for="cf-name">お名前<span class="req">必須</span></label>
                 <input type="text" id="cf-name" name="name" autocomplete="name" required>
@@ -128,7 +128,7 @@
               </div>
               <div class="field">
                 <label for="cf-body">お問い合わせ内容<span class="req">必須</span></label>
-                <textarea id="cf-body" name="body" required placeholder="作りたいサイトのイメージ、掲載したい内容、ご予算感、参考サイトのURLなど、わかる範囲でご記入ください。"></textarea>
+                <textarea id="cf-body" name="message" required placeholder="作りたいサイトのイメージ、掲載したい内容、ご予算感、参考サイトのURLなど、わかる範囲でご記入ください。"></textarea>
               </div>
               <button type="submit" class="btn btn-primary btn-lg btn-block mt-16">送信する</button>
               <p class="form-status" id="formStatus" role="status" aria-live="polite"></p>
