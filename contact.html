@@ -17,10 +17,11 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Noto+Serif+JP:wght@500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/style.css">
-<!-- Promeon Web お問い合わせページ。フォームはブラウザから直接 FormSubmit（AJAX）へ送信する。
-     送信先: https://formsubmit.co/ajax/c657e4f5a5834061f7d818a159b68656（APIキー・サーバー関数不要）。
-     ↑ FormSubmit のランダムエイリアス。実際の宛先は satokazu.promeon@gmail.com（HTMLにメールを露出させないため）。
-     送信処理は js/script.js の #contactForm ハンドラ。honeypot は _honey。
+<!-- Promeon Web お問い合わせページ。フォームは FormSubmit の通常送信（非AJAX）で POST する。
+     送信先: https://formsubmit.co/c657e4f5a5834061f7d818a159b68656（APIキー・サーバー関数不要）。
+     ↑ FormSubmit のランダムエイリアス。実際の宛先は登録済みメールアドレス（HTMLにメールを露出させないため）。
+     送信後は _next（js/script.js が現在のオリジン + ?sent=1 に書き換え）へ戻り、完了メッセージを表示。
+     honeypot は _honey。送信処理の残り（_next 書き換え・完了表示）は js/script.js の #contactForm 部分。
      電話番号・受付時間は要確認のため掲載せず、メール・フォーム・公式LINEのみ案内。動きは控えめ（main.quiet）。 -->
 </head>
 <body>
@@ -96,8 +97,12 @@
       <div class="split" style="align-items:flex-start;">
         <div class="split-body">
           <div class="form-wrap">
-            <form id="contactForm" action="https://formsubmit.co/ajax/c657e4f5a5834061f7d818a159b68656" method="POST" novalidate>
+            <form id="contactForm" action="https://formsubmit.co/c657e4f5a5834061f7d818a159b68656" method="POST">
               <input type="text" name="_honey" class="hp-field" tabindex="-1" autocomplete="off" aria-hidden="true">
+              <input type="hidden" name="_subject" value="お問い合わせ（Promeon Web）">
+              <input type="hidden" name="_template" value="table">
+              <input type="hidden" name="_captcha" value="false">
+              <input type="hidden" name="_next" value="https://promeon-web.vercel.app/contact.html?sent=1">
               <div class="field">
                 <label for="cf-name">お名前<span class="req">必須</span></label>
                 <input type="text" id="cf-name" name="name" autocomplete="name" required>

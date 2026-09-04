@@ -4,7 +4,7 @@
    - スクロール連動フェードイン（順次出現型 / [data-stagger] / prefers-reduced-motion 配慮）
    - 制作サンプルの「見え隠れ型」表示（双方向トグル）
    - よくある質問のアコーディオン開閉（高さトランジション）
-   - お問い合わせフォームの送信（ブラウザから直接 FormSubmit AJAX へ POST）
+   - お問い合わせフォームの送信（FormSubmit 通常送信・非AJAX／_next 書き換え＋完了表示）
    - ヘッダーの影付与（スクロール時） / フッター年号の自動表示 */
 (function () {
   'use strict';
@@ -138,85 +138,51 @@
     });
   });
 
-  /* ---------- お問い合わせフォーム（ブラウザ → FormSubmit AJAX） ----------
-     form[action] の FormSubmit AJAX エンドポイントへ、日本語ラベルのキーで
-     JSON を POST する。成功表示は HTTP 200 かつ body.success === "true" のときだけ。
-     二重送信防止は送信中の送信ボタン disabled のみ（再送はページ再読込）。 */
+  /* ---------- お問い合わせフォーム（FormSubmit 通常送信 / 非AJAX） ----------
+     form[action] = https://formsubmit.co/<ランダムエイリアス> へ通常の POST 送信。
+     送信後 FormSubmit は _next の URL へリダイレクトで戻す。ここでは
+       ・_next を「実際に配信されているオリジン + ?sent=1」に書き換え
+         （本番ドメインが変わっても戻り先が一致するように）
+       ・ハニーポット（_honey）が埋まっていれば送信を中止
+       ・二重送信防止として送信ボタンを無効化
+     だけを行い、あとはブラウザの通常送信に任せる（preventDefault しない）。
+     戻ってきたページ（?sent=1）で完了メッセージを表示する。 */
   var form = document.getElementById('contactForm');
   if (form) {
-    var planLabels = { mini: 'Mini', standard: 'Standard', pro: 'Pro' };
+    var status = document.getElementById('formStatus');
+
+    function showFormStatus(ok, msg) {
+      if (!status) return;
+      status.className = 'form-status is-show ' + (ok ? 'is-ok' : 'is-ng');
+      status.textContent = msg;
+      status.setAttribute('tabindex', '-1');
+      try { status.scrollIntoView({ block: 'center' }); } catch (err) {}
+      status.focus();
+    }
 
     form.addEventListener('submit', function (e) {
-      e.preventDefault();
-
-      var status = document.getElementById('formStatus');
-      var submitBtn = form.querySelector('button[type="submit"]');
-
-      function showStatus(ok, msg) {
-        if (!status) return;
-        status.className = 'form-status is-show ' + (ok ? 'is-ok' : 'is-ng');
-        status.textContent = msg;
-        status.setAttribute('tabindex', '-1');
-        status.focus();
-      }
-
-      // ハニーポット（bot が埋めたら送信せず、成功したかのように振る舞う）
+      // ハニーポット：bot が埋めていたら送信しない
       var honey = form.querySelector('[name="_honey"]');
-      if (honey && honey.value) {
-        showStatus(true, 'お問い合わせを送信しました。');
-        form.reset();
-        return;
+      if (honey && honey.value) { e.preventDefault(); return; }
+
+      // 戻り先（_next）を実際のオリジンに合わせる
+      var next = form.querySelector('[name="_next"]');
+      if (next) {
+        next.value = window.location.origin + window.location.pathname + '?sent=1';
       }
 
-      if (!form.checkValidity()) { form.reportValidity(); return; }
-
-      var v = function (name) {
-        var el = form.querySelector('[name="' + name + '"]');
-        return el ? el.value.trim() : '';
-      };
-      var planVal = v('plan');
-      var payload = {
-        'お名前': v('name'),
-        '会社名・屋号': v('company'),
-        'メールアドレス': v('email'),
-        'ご検討中のプラン': planVal ? (planLabels[planVal] || planVal) : '未選択',
-        'お問い合わせ内容': v('body'),
-        '送信日時': new Date().toLocaleString('ja-JP'),
-        'email': v('email'),
-        '_subject': 'お問い合わせ（Promeon Web）: ' + (v('name') || '名前未入力'),
-        '_template': 'table',
-        '_captcha': 'false'
-      };
-
-      var endpoint = form.getAttribute('action');
+      // 二重送信防止（通常送信はそのまま実行する）
+      var submitBtn = form.querySelector('button[type="submit"]');
       if (submitBtn) { submitBtn.disabled = true; submitBtn.setAttribute('aria-busy', 'true'); }
-      showStatus(true, '送信しています…');
-
-      fetch(endpoint, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-        body: JSON.stringify(payload)
-      })
-        .then(function (res) {
-          return res.json().catch(function () { return {}; }).then(function (data) {
-            return { ok: res.ok, data: data };
-          });
-        })
-        .then(function (r) {
-          if (r.ok && r.data && String(r.data.success) === 'true') {
-            showStatus(true, 'お問い合わせを送信しました。内容を確認のうえ、通常2〜3営業日以内に担当者よりご返信いたします。');
-            form.reset();
-          } else {
-            throw new Error('unexpected response');
-          }
-        })
-        .catch(function () {
-          showStatus(false, '送信に失敗しました。お手数ですが、時間をおいて再度お試しいただくか、satokazu.promeon@gmail.com へ直接ご連絡ください。');
-        })
-        .then(function () {
-          if (submitBtn) { submitBtn.disabled = false; submitBtn.removeAttribute('aria-busy'); }
-        });
     });
+
+    // FormSubmit から ?sent=1 付きで戻ってきたら完了メッセージを表示し、URL を元に戻す
+    if (/[?&]sent=1(?:&|$)/.test(window.location.search)) {
+      showFormStatus(true, 'お問い合わせを送信しました。内容を確認のうえ、担当者よりご返信いたします。');
+      if (window.history && window.history.replaceState) {
+        window.history.replaceState(null, '', window.location.pathname);
+      }
+    }
   }
 
   /* ---------- ヘッダーの影（スクロール時） ---------- */
