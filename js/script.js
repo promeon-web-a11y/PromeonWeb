@@ -12,6 +12,18 @@
   var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var hasIO = 'IntersectionObserver' in window;
 
+  /* ---------- INTRO 演出の後片付け（保険） ----------
+     CSS アニメーションで自動的に隠れる設計だが、
+     念のため一定時間後に DOM から取り除いて操作をブロックしないようにする。 */
+  var introOverlay = document.getElementById('introOverlay');
+  if (introOverlay) {
+    window.setTimeout(function () {
+      if (introOverlay && introOverlay.parentNode) {
+        introOverlay.parentNode.removeChild(introOverlay);
+      }
+    }, 2200);
+  }
+
   /* ---------- キャッチコピー先行型（FV／TOPのみ） ----------
      .hero-catch 内テキストを1文字ずつ <span class="cc"> で包み、
      1文字あたり約100msの時間差でフェード＋下→上スライドで出現させる。 */
@@ -30,6 +42,14 @@
     }
     el.appendChild(frag);
     return el.querySelectorAll('.cc');
+  }
+
+  /* FV 背景写真（.hero-bg）のフェードイン用に .is-in を付与。
+     .hero-catch は廃止したが、SCROLL インジケーターの表示にも使う。 */
+  if (hero) {
+    requestAnimationFrame(function () {
+      requestAnimationFrame(function () { hero.classList.add('is-in'); });
+    });
   }
 
   if (hero && catchEl) {

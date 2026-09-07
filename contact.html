@@ -10,7 +10,9 @@
 <meta property="og:locale" content="ja_JP">
 <meta property="og:title" content="お問い合わせ・無料相談｜Promeon Web">
 <meta property="og:description" content="フォーム・メール・公式LINEから受付。ご相談とお見積りは無料です。">
-<meta property="og:image" content="images/ogp-placeholder.svg">
+<link rel="canonical" href="https://promeon-web-w5n1.vercel.app/contact.html">
+<meta property="og:url" content="https://promeon-web-w5n1.vercel.app/contact.html">
+<meta property="og:image" content="https://promeon-web-w5n1.vercel.app/images/ogp.png">
 <link rel="icon" href="images/favicon.png" type="image/png" sizes="any">
 <link rel="apple-touch-icon" href="images/favicon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -24,7 +26,7 @@
      一時的にすべて外している: ランダムエイリアス / /ajax/ 送信 / JavaScript(fetch)送信 / 独自AJAX /
        _next による戻り先指定 / 独自の送信完了表示（js/script.js の #contactForm 部分）。
      送信後は FormSubmit 標準の Thank You ページへ遷移する。honeypot は _honey、_captcha は標準（有効）。
-     電話番号・受付時間は要確認のため掲載せず、メール・フォーム・公式LINEのみ案内。動きは控えめ（main.quiet）。 -->
+     連絡先はメール・フォーム・公式LINEのみ案内。動きは控えめ（main.quiet）。 -->
 </head>
 <body>
 <a class="skip-link" href="#main">本文へスキップ</a>
@@ -35,7 +37,7 @@
       <img src="images/favicon.png" alt="" class="logo-mark" width="34" height="34">
       <span class="logo-text">
         <span class="logo-name">Promeon Web</span>
-        <span class="logo-sub">中小企業・個人事業主のためのWeb制作</span>
+        <span class="logo-sub">中小企業・個人事業主のためのホームページ制作</span>
       </span>
     </a>
     <nav class="header-nav" aria-label="メインメニュー">
@@ -49,7 +51,7 @@
       <a href="company.html" class="header-nav-link">会社概要</a>
     </nav>
     <div class="header-actions">
-      <a href="contact.html" class="btn btn-primary btn-sm header-cta" aria-current="page">無料相談・無料見積り</a>
+      <a href="contact.html" class="btn btn-primary btn-sm header-cta" aria-current="page">無料で相談する</a>
       <button type="button" class="menu-btn" id="menuBtn" aria-label="メニューを開く" aria-expanded="false" aria-controls="siteNav">
         <span></span><span></span><span></span>
       </button>
@@ -80,7 +82,7 @@
 
 <main id="main" class="quiet">
   <section class="page-hero">
-    <img src="images/page-hero-placeholder.svg" alt="" class="page-hero-img" aria-hidden="true">
+    <img src="images/page-hero.webp" alt="" class="page-hero-img" aria-hidden="true" width="2048" height="768" decoding="async">
     <div class="page-hero-inner">
       <p class="page-hero-kicker">CONTACT</p>
       <h1>お問い合わせ・無料相談</h1>
@@ -118,12 +120,24 @@
                 <p class="hint">ご返信先として使用します。</p>
               </div>
               <div class="field">
-                <label for="cf-plan">ご検討中のプラン<span class="opt">任意</span></label>
+                <label for="cf-plan">ご相談内容・ご検討中のプラン<span class="opt">任意</span></label>
                 <select id="cf-plan" name="plan">
                   <option value="">選択しない・わからない</option>
-                  <option value="mini">Mini</option>
-                  <option value="standard">Standard</option>
-                  <option value="pro">Pro</option>
+                  <optgroup label="ホームページ制作">
+                    <option value="ホームページ制作：Mini">Mini（1ページ・49,800円〜）</option>
+                    <option value="ホームページ制作：Standard">Standard（5ページ程度・99,800円〜）</option>
+                    <option value="ホームページ制作：Pro">Pro（7ページ程度〜・164,800円〜）</option>
+                    <option value="ホームページのリニューアル">ホームページのリニューアル</option>
+                    <option value="Webサイトの完全オーダーメイド制作">Webサイトの完全オーダーメイド制作（要お見積り）</option>
+                  </optgroup>
+                  <optgroup label="採用支援">
+                    <option value="採用支援：求人文章の作成">求人文章の作成</option>
+                    <option value="採用支援：採用導線の設計">採用導線の設計（LINE自動応答など）</option>
+                    <option value="採用支援：既存サイトの採用ページ改善">既存サイトの採用ページ改善</option>
+                    <option value="採用支援：採用SNSの運用設計・運用支援">採用SNSの運用設計・運用支援</option>
+                    <option value="採用支援：内容を相談したい">採用支援（内容を相談したい）</option>
+                  </optgroup>
+                  <option value="まずは無料相談・お見積りのみ">まずは無料相談・お見積りのみ</option>
                 </select>
               </div>
               <div class="field">
@@ -144,7 +158,7 @@
           <hr>
           <p class="mb-0">SNS：<br><a href="https://www.instagram.com/PromeonWeb/">Instagram（@PromeonWeb）</a><br><a href="https://www.facebook.com/profile.php?id=61594058514921">Facebook</a></p>
           <hr>
-          <p class="inline-note mb-0">ご相談・お見積りは無料です。内容と料金をご確認いただいてから、正式にご依頼いただけます。返信の目安は要確認です。</p>
+          <p class="inline-note mb-0">ご相談・お見積りは無料です。内容と料金をご確認いただいてから、正式にご依頼いただけます。</p>
         </aside>
       </div>
     </div>
@@ -157,8 +171,7 @@
       <div class="footer-brand">
         <p class="f-name">Promeon Web</p>
         <p class="f-catch">新しい火を灯し、未来を切り拓く</p>
-        <p>中小企業・個人事業主向けに、チャット中心でWebサイトを制作するサービスです。<br>お問い合わせ：<a href="mailto:satokazu.promeon@gmail.com" style="color:#fff;">satokazu.promeon@gmail.com</a><br>公式LINE：<a href="https://lin.ee/onG5cTt" style="color:#fff;">友だち追加はこちら</a><br>Instagram：<a href="https://www.instagram.com/PromeonWeb/" style="color:#fff;">@PromeonWeb</a>／Facebook：<a href="https://www.facebook.com/profile.php?id=61594058514921" style="color:#fff;">ページ</a></p>
-        <p>所在地・受付時間：要確認</p>
+        <p>中小企業・個人事業主向けに、チャット中心でホームページを制作・リニューアルするサービスです。<br>お問い合わせ：<a href="mailto:satokazu.promeon@gmail.com" style="color:#fff;">satokazu.promeon@gmail.com</a><br>公式LINE：<a href="https://lin.ee/onG5cTt" style="color:#fff;">友だち追加はこちら</a><br>Instagram：<a href="https://www.instagram.com/PromeonWeb/" style="color:#fff;">@PromeonWeb</a>／Facebook：<a href="https://www.facebook.com/profile.php?id=61594058514921" style="color:#fff;">ページ</a></p>
       </div>
       <div class="footer-col">
         <h3>サービス</h3>
@@ -191,14 +204,14 @@
       <a href="contact.html">お問い合わせ</a>
     </nav>
     <div class="footer-bottom">
-      <span>Promeon Web／中小企業・個人事業主のためのWeb制作サービス</span>
+      <span>Promeon Web／中小企業・個人事業主のためのホームページ制作サービス</span>
       <span>&copy; <span id="copyYear">2026</span> Promeon Web</span>
     </div>
   </div>
 </footer>
 
 <div class="mobile-cta">
-  <a href="contact.html" class="mc-contact">無料相談・無料見積り</a>
+  <a href="contact.html" class="mc-contact">無料で相談する</a>
   <a href="plans.html" class="mc-plans">料金</a>
 </div>
 
